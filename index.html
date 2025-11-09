@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartomancia Profissional - Consultas e Tiragens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        mystical: {
+                            dark: '#27264e',
+                            darkest: '#1a1a3e',
+                            purple: '#7b2cbf',
+                            light: '#c77dff',
+                            gold: '#ffd60a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        h1, h2, h3, .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        .mystical-gradient {
+            background: linear-gradient(135deg, #1a0b2e 0%, #4a148c 50%, #7b2cbf 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.4);
+        }
+
+        .stars {
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 60px 70px, white, transparent),
+                radial-gradient(1px 1px at 50px 50px, white, transparent),
+                radial-gradient(1px 1px at 130px 80px, white, transparent),
+                radial-gradient(2px 2px at 90px 10px, white, transparent),
+                radial-gradient(1px 1px at 150px 120px, white, transparent),
+                radial-gradient(2px 2px at 180px 160px, white, transparent),
+                radial-gradient(1px 1px at 110px 180px, white, transparent),
+                radial-gradient(2px 2px at 40px 150px, white, transparent),
+                radial-gradient(1px 1px at 170px 40px, white, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: stars-move 100s linear infinite;
+            background-position: 0 0, 100px 100px;
+        }
+
+        @keyframes stars-move {
+            from { background-position: 0 0, 100px 100px; }
+            to { background-position: 200px 200px, 300px 300px; }
+        }
+
+        .glow {
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 40px rgba(168, 85, 247, 0.4);
+        }
+
+        .tarot-card {
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        .tarot-card:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .tarot-card:nth-child(2) {
+            animation-delay: 1.3s;
+        }
+
+        .tarot-card:nth-child(3) {
+            animation-delay: 2.6s;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translateY(0px) scale(1) rotate(var(--rotation));
+            }
+            50% {
+                transform: translateY(-8px) scale(1.02) rotate(var(--rotation));
+            }
+        }
+
+        @keyframes gentleFloatCentered {
+            0%, 100% {
+                transform: translate(-50%, -50%) translateY(0px) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) translateY(-8px) scale(1.02);
+                opacity: 1;
+            }
+        }
+
+        .card-centered-init {
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+
+        .card-rotated-init {
+            transform: rotate(var(--rotation));
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
+        .card-glow {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white" style="background: linear-gradient(135deg, #27264e 0%, #1a1a3e 50%, #27264e 100%);">
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 backdrop-blur-md border-b border-purple-500/30 shadow-lg" style="background: rgba(39, 38, 78, 0.95);">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-3 group">
+                    <svg class="w-10 h-10 text-purple-400 group-hover:text-purple-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                    </svg>
+                    <span class="text-2xl font-cinzel font-bold text-white group-hover:text-purple-300 transition-colors">Melissa Cartomancia</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-base font-medium text-white hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
+                        Início
+                    </a>
+                    <a href="tiragens.html" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition-all transform hover:scale-105 shadow-lg hover:shadow-purple-500/50">
+                        Solicitar Tiragem
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-purple-400 transition-colors">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3">
+                <a href="index.html" class="block hover:text-purple-400 transition">Início</a>
+                <a href="tiragens.html" class="block bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-full transition font-semibold text-center">Solicitar Tiragem</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden stars flex items-center pt-20 md:pt-0" style="min-height: 100vh;">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <!-- Lado Esquerdo - Texto -->
+                    <div class="text-center md:text-left order-2 md:order-1">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-cinzel font-bold mb-4 md:mb-6 glow animate-pulse">
+                            Melissa Cartomancia
+                        </h1>
+                        <p class="text-lg sm:text-xl md:text-2xl text-purple-200 mb-6 md:mb-8 font-light">
+                            Mais que uma consulta
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <a href="tiragens.html" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 md:py-4 px-6 md:px-8 rounded-full text-base md:text-lg transition transform hover:scale-105 shadow-lg">
+                                ✨ Solicitar Tiragem Agora
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Lado Direito - Cartas de Tarô -->
+                    <div class="relative order-1 md:order-2">
+                        <div class="relative w-full h-64 sm:h-80 md:h-96 flex items-center justify-center">
+                            <!-- Carta 1 - A Estrela -->
+                            <div class="tarot-card card-rotated-init absolute transition-all duration-700" style="left: 5%; top: 10%; z-index: 1; --rotation: -6deg;">
+                                <div class="w-32 h-52 sm:w-40 sm:h-64 md:w-44 md:h-72 bg-black rounded-xl shadow-2xl border border-purple-400/50 overflow-hidden backdrop-blur card-glow">
+                                    <div class="h-full bg-gradient-to-br from-purple-950/90 via-indigo-950/90 to-purple-900/90 p-3 sm:p-4 flex flex-col justify-between">
+                                        <div class="text-center">
+                                            <div class="text-xs text-purple-300 font-cinzel mb-2">XVII</div>
+                                            <div class="w-full h-32 flex items-center justify-center">
+                                                <svg class="w-20 h-20 text-purple-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="text-sm text-purple-200 font-cinzel font-bold mt-2">A ESTRELA</div>
+                                        </div>
+                                        <div class="border-t border-purple-500/30 pt-2">
+                                            <div class="text-xs text-purple-400 text-center font-serif">Esperança • Renovação</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Carta 2 - A Lua (Central - Principal) -->
+                            <div class="absolute card-centered-init" style="left: 50%; top: 50%; z-index: 10; animation: gentleFloatCentered 4s ease-in-out infinite 1.3s;">
+                                <div class="w-40 h-64 sm:w-48 sm:h-72 md:w-52 md:h-80 bg-black rounded-xl shadow-2xl border-2 border-purple-400/70 overflow-hidden backdrop-blur card-glow">
+                                    <div class="h-full bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-800/95 p-4 sm:p-5 flex flex-col justify-between">
+                                        <div class="text-center">
+                                            <div class="text-xs sm:text-sm text-purple-200 font-cinzel mb-2 sm:mb-3">XVIII</div>
+                                            <div class="w-full h-28 sm:h-36 md:h-40 flex items-center justify-center">
+                                                <svg class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-purple-200 animate-pulse" fill="currentColor" viewBox="0 0 20 20" style="animation-duration: 3s;">
+                                                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="text-sm sm:text-base text-white font-cinzel font-bold mt-2 sm:mt-3">A LUA</div>
+                                        </div>
+                                        <div class="border-t border-purple-400/40 pt-3">
+                                            <div class="text-xs text-purple-300 text-center font-serif">Intuição • Mistério</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Carta 3 - O Sol -->
+                            <div class="tarot-card card-rotated-init absolute transition-all duration-700" style="right: 5%; top: 10%; z-index: 1; --rotation: 6deg;">
+                                <div class="w-32 h-52 sm:w-40 sm:h-64 md:w-44 md:h-72 bg-black rounded-xl shadow-2xl border border-purple-400/50 overflow-hidden backdrop-blur card-glow">
+                                    <div class="h-full bg-gradient-to-br from-indigo-950/90 via-purple-950/90 to-indigo-900/90 p-3 sm:p-4 flex flex-col justify-between">
+                                        <div class="text-center">
+                                            <div class="text-xs text-purple-300 font-cinzel mb-2">XIX</div>
+                                            <div class="w-full h-32 flex items-center justify-center">
+                                                <svg class="w-20 h-20 text-purple-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 2.5s;">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="text-sm text-purple-200 font-cinzel font-bold mt-2">O SOL</div>
+                                        </div>
+                                        <div class="border-t border-purple-500/30 pt-2">
+                                            <div class="text-xs text-purple-400 text-center font-serif">Sucesso • Alegria</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Brilho de fundo místico -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-full blur-3xl pointer-events-none animate-pulse" style="animation-duration: 4s;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seta para baixo -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+            <svg class="w-8 h-8 text-purple-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation: bounceArrow 2s ease-in-out infinite;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Cards de Navegação -->
+    <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+                <!-- Card Tiragens -->
+                <a href="tiragens.html" class="block card-hover sm:col-start-2 md:col-start-2">
+                    <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-purple-400/70 overflow-hidden backdrop-blur card-glow ring-2 ring-purple-400/50">
+                        <div class="h-full bg-gradient-to-br from-purple-900/95 via-pink-900/95 to-purple-800/95 p-6 flex flex-col justify-between">
+                            <div class="text-center">
+                                <div class="text-xs text-purple-200 font-cinzel mb-3">III</div>
+                                <div class="w-full h-24 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 2s;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                    </svg>
+                                </div>
+                                <div class="text-lg text-white font-cinzel font-bold mt-3 mb-2">A CONSULTA</div>
+                                <p class="text-xs text-purple-200 px-2 leading-relaxed">
+                                    Escolha seu tipo de tiragem e receba orientação personalizada agora
+                                </p>
+                            </div>
+                            <div class="border-t border-purple-400/40 pt-3">
+                                <p class="text-xs text-purple-200 text-center font-serif">
+                                    Revelação • Destino
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Benefícios -->
+    <section class="py-12 md:py-20" style="background: rgba(39, 38, 78, 0.5);">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-cinzel font-bold text-center mb-12 md:mb-16 glow">
+                Por Que Escolher Nossas Consultas?
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+                <div class="text-center">
+                    <div class="bg-purple-800/40 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Profissionalismo</h3>
+                    <p class="text-purple-200">Anos de experiência e dedicação à arte da cartomancia</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-purple-800/40 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Segurança</h3>
+                    <p class="text-purple-200">Pagamento 100% seguro via Mercado Pago</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-purple-800/40 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Rapidez</h3>
+                    <p class="text-purple-200">Resposta em até 3 dias úteis após confirmação do pagamento</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-purple-500/30 py-4" style="background: rgba(39, 38, 78, 0.8);">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-purple-300 text-sm">
+                © Melissa Cartomancia. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
