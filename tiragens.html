@@ -57,32 +57,32 @@
         }
     </style>
 </head>
-<body class="min-h-screen text-white" style="background: linear-gradient(135deg, #27264e 0%, #1a1a3e 50%, #27264e 100%);">
+<body class="min-h-screen text-white" style="background: linear-gradient(135deg, #181349 0%, #0f0d2e 50%, #181349 100%);">
     <!-- Header -->
-    <header class="fixed w-full top-0 z-50 backdrop-blur-md border-b border-purple-500/30 shadow-lg" style="background: rgba(39, 38, 78, 0.95);">
+    <header class="fixed w-full top-0 z-50 backdrop-blur-md border-b border-purple-500/30 shadow-lg" style="background: rgba(24, 19, 73, 0.95);">
         <nav class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3 group">
-                    <svg class="w-10 h-10 text-purple-400 group-hover:text-purple-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                    <svg class="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors translate-y-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.5 2.5L15 7l4.5 1.5L15 10l-1.5 4.5L12 10 7.5 8.5 12 7z"/>
                     </svg>
                     <span class="text-2xl font-cinzel font-bold text-white group-hover:text-purple-300 transition-colors">Melissa Cartomancia</span>
                 </a>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-base font-medium text-purple-200 hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
+                    <a href="index.html" class="text-base font-medium text-white hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
                         Início
                     </a>
-                    <a href="biografia.html" class="text-base font-medium text-purple-200 hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
-                        Biografia
+                    <a href="index.html#como-funciona" class="text-base font-medium text-white hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
+                        Como Funciona
                     </a>
-                    <a href="passo-a-passo.html" class="text-base font-medium text-purple-200 hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
-                        Passo a Passo
+                    <a href="index.html#sobre-melissa" class="text-base font-medium text-white hover:text-purple-400 transition-colors py-2 border-b-2 border-transparent hover:border-purple-400">
+                        Sobre Melissa
                     </a>
                     <a href="tiragens.html" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition-all transform hover:scale-105 shadow-lg hover:shadow-purple-500/50">
-                        ✨ Solicitar Tiragem
+                        Solicitar Tiragem
                     </a>
                 </div>
 
@@ -96,9 +96,9 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3">
                 <a href="index.html" class="block hover:text-purple-400 transition">Início</a>
-                <a href="biografia.html" class="block hover:text-purple-400 transition">Biografia</a>
-                <a href="passo-a-passo.html" class="block hover:text-purple-400 transition">Passo a Passo</a>
-                <a href="tiragens.html" class="block text-purple-400">Solicitar Tiragem</a>
+                <a href="index.html#como-funciona" class="block hover:text-purple-400 transition">Como Funciona</a>
+                <a href="index.html#sobre-melissa" class="block hover:text-purple-400 transition">Sobre Melissa</a>
+                <a href="tiragens.html" class="block bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-full transition font-semibold text-center">Solicitar Tiragem</a>
             </div>
         </nav>
     </header>
@@ -108,12 +108,14 @@
         <div class="container mx-auto px-4">
             <div class="max-w-7xl mx-auto">
                 <!-- Título -->
-                <h1 class="text-5xl md:text-6xl font-cinzel font-bold text-center mb-8 glow">
-                    Solicitar Tiragem
-                </h1>
-                <p class="text-xl text-purple-300 text-center mb-16">
-                    Escolha o tipo de leitura ideal para o seu momento
-                </p>
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl md:text-7xl font-cinzel font-bold mb-4 glow">
+                        Sua Tiragem
+                    </h1>
+                    <p class="text-xl md:text-2xl text-purple-300 max-w-2xl mx-auto">
+                        Escolha sua leitura e descubra o que as cartas revelam
+                    </p>
+                </div>
 
                 <form id="tiragem-form" class="space-y-12">
                     <!-- Seção 1: Tipos de Tiragem -->
@@ -124,109 +126,132 @@
                         </h2>
 
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Tiragem 1 - Amor -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('amor', 50, this)">
-                                <div class="text-5xl mb-4">❤️</div>
-                                <h3 class="text-2xl font-bold mb-2">Tiragem do Amor</h3>
-                                <p class="text-purple-300 mb-4">Perfeita para questões sobre relacionamentos, sentimentos e vida amorosa.</p>
-                                <p class="text-2xl font-bold text-pink-400">R$ 50,00</p>
+                            <!-- Tiragem 1 - Pergunta Avulsa -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-pink-900/40 to-purple-900/40 rounded-2xl p-8 border border-pink-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('pergunta-avulsa', 70, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">❓</div>
+                                <div class="text-4xl mb-4">❓</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Pergunta Avulsa</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    <strong>Importante:</strong> Este serviço não segue um método fixo, é utilizado aquele que melhor responder a sua pergunta.</br><b>Neste método não respondo sobre traição.</b>
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-pink-400">A partir de R$ 70</span>
+                                </div>
                             </div>
 
-                            <!-- Tiragem 2 - Carreira -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('carreira', 50, this)">
-                                <div class="text-5xl mb-4">💼</div>
-                                <h3 class="text-2xl font-bold mb-2">Tiragem de Carreira</h3>
-                                <p class="text-purple-300 mb-4">Orientação sobre trabalho, oportunidades profissionais e prosperidade.</p>
-                                <p class="text-2xl font-bold text-green-400">R$ 50,00</p>
+                            <!-- Tiragem 2 - Templo de Afrodite -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-rose-900/40 to-pink-900/40 rounded-2xl p-8 border border-rose-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('templo-afrodite', 165, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">🏛️</div>
+                                <div class="text-4xl mb-4">🏛️</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Templo de Afrodite</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    <strong>O que essa leitura vai te revelar:</strong><br>
+                                    • Seus pensamentos e os da pessoa amada<br>
+                                    • Os sentimentos de cada um: amor, dúvida, desejo, medo, conexão verdadeira<br>
+                                    • As intenções ou atitudes de ambos<br>
+                                    • O momento atual do vínculo e possíveis caminhos da relação
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-rose-400">A partir de R$ 165</span>
+                                </div>
                             </div>
 
-                            <!-- Tiragem 3 - Espiritual -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('espiritual', 60, this)">
-                                <div class="text-5xl mb-4">🌟</div>
-                                <h3 class="text-2xl font-bold mb-2">Tiragem Espiritual</h3>
-                                <p class="text-purple-300 mb-4">Aprofundamento em questões de alma, propósito e conexão espiritual.</p>
-                                <p class="text-2xl font-bold text-purple-400">R$ 60,00</p>
+                            <!-- Tiragem 3 - Carta Canalizada -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-purple-900/40 to-violet-900/40 rounded-2xl p-8 border border-purple-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('carta-canalizada', 200, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">💌</div>
+                                <div class="text-4xl mb-4">💌</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Carta Canalizada</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    Uma carta escrita como se viesse da própria pessoa, dizendo o que o coração dela não conseguiu expressar. Revela pensamentos e sentimentos ocultos, trazendo à luz as verdades que o silêncio tentou ocultar.
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-purple-400">R$ 200</span>
+                                </div>
                             </div>
 
-                            <!-- Tiragem 4 - Geral -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('geral', 45, this)">
-                                <div class="text-5xl mb-4">🔮</div>
-                                <h3 class="text-2xl font-bold mb-2">Tiragem Geral</h3>
-                                <p class="text-purple-300 mb-4">Visão panorâmica sobre diversos aspectos da sua vida atual.</p>
-                                <p class="text-2xl font-bold text-blue-400">R$ 45,00</p>
+                            <!-- Tiragem 4 - Previsão Anual -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-blue-900/40 to-cyan-900/40 rounded-2xl p-8 border border-blue-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('previsao-anual', 400, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">📅</div>
+                                <div class="text-4xl mb-4">📅</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Previsão Anual</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    As energias que guiarão seus próximos 12 meses, revelando tendências, caminhos, aprendizados e oportunidades de cada fase. Mensagens de diferentes baralhos trazendo visões complementares e profundas sobre o ano que se inicia.
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-blue-400">R$ 400</span>
+                                </div>
                             </div>
 
-                            <!-- Tiragem 5 - Passado/Presente/Futuro -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('temporal', 55, this)">
-                                <div class="text-5xl mb-4">⏳</div>
-                                <h3 class="text-2xl font-bold mb-2">Passado/Presente/Futuro</h3>
-                                <p class="text-purple-300 mb-4">Compreenda sua jornada através do tempo e tendências futuras.</p>
-                                <p class="text-2xl font-bold text-indigo-400">R$ 55,00</p>
+                            <!-- Tiragem 5 - Previsão Mensal -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-indigo-900/40 to-blue-900/40 rounded-2xl p-8 border border-indigo-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('previsao-mensal', 130, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">🗓️</div>
+                                <div class="text-4xl mb-4">🗓️</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Previsão Mensal</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    As energias de cada semana do mês, mostrando aprendizados, desafios e oportunidades. Orientações para seguir o período com clareza e equilíbrio. <em>Obs: Tiragem referente ao mês seguinte.</em>
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-indigo-400">R$ 130</span>
+                                </div>
                             </div>
 
-                            <!-- Tiragem 6 - Decisão -->
-                            <div class="card-tiragem bg-purple-900/50 rounded-xl p-6 border-2 border-purple-700/50 cursor-pointer" 
-                                 onclick="selectTiragem('decisao', 55, this)">
-                                <div class="text-5xl mb-4">⚖️</div>
-                                <h3 class="text-2xl font-bold mb-2">Tiragem de Decisão</h3>
-                                <p class="text-purple-300 mb-4">Análise de duas opções para ajudá-lo a escolher o melhor caminho.</p>
-                                <p class="text-2xl font-bold text-yellow-400">R$ 55,00</p>
+                            <!-- Tiragem 6 - Tem Traição? -->
+                            <div class="card-tiragem relative overflow-hidden bg-gradient-to-br from-red-900/40 to-orange-900/40 rounded-2xl p-8 border border-red-500/30 cursor-pointer group" 
+                                 onclick="selectTiragem('tem-traicao', 280, this)">
+                                <div class="absolute top-4 right-4 text-4xl opacity-20 group-hover:opacity-40 transition-opacity">💔</div>
+                                <div class="text-4xl mb-4">💔</div>
+                                <h3 class="text-2xl font-cinzel font-bold mb-3">Tem Traição?</h3>
+                                <p class="text-purple-200 text-sm mb-6 leading-relaxed">
+                                    Revela se existe outra pessoa interferindo, o que causou a quebra de confiança, os sentimentos verdadeiros, padrões ocultos de deslealdade, a energia atual do vínculo e a verdade sobre a outra relação.
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-3xl font-bold text-red-400">R$ 280</span>
+                                </div>
                             </div>
                         </div>
 
                         <input type="hidden" id="selected-tiragem" name="tipo_tiragem" required>
                         <input type="hidden" id="preco-unitario" name="preco_unitario">
+                        <input type="hidden" id="quantidade" name="quantidade" value="1">
                     </div>
 
-                    <!-- Seção 2: Quantidade e Emergencial -->
+                    <!-- Seção 2: Opções -->
                     <div class="bg-gradient-to-br from-indigo-800/40 to-purple-900/40 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-purple-500/30">
                         <h2 class="text-3xl font-cinzel font-bold mb-8 flex items-center">
                             <span class="bg-indigo-600 rounded-full w-10 h-10 flex items-center justify-center mr-4">2</span>
-                            Quantidade e Opções
+                            Opções
                         </h2>
 
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- Quantidade -->
-                            <div>
-                                <label for="quantidade" class="block text-xl font-bold mb-4">
-                                    Quantas tiragens você deseja?
+                        <!-- Seletor de Quantidade (para Pergunta Avulsa e Templo de Afrodite) -->
+                        <div id="quantidade-selector" class="max-w-2xl mx-auto mb-6" style="display: none;">
+                            <div class="bg-purple-900/30 border-2 border-purple-500/50 rounded-xl p-6">
+                                <label class="block text-xl font-bold mb-4" id="quantidade-label">
+                                    Quantas perguntas você deseja?
                                 </label>
-                                <div class="flex items-center gap-4">
-                                    <button type="button" onclick="decreaseQuantity()" class="bg-purple-700 hover:bg-purple-600 w-12 h-12 rounded-lg text-2xl font-bold transition">
+                                <div class="flex items-center justify-center gap-4">
+                                    <button type="button" onclick="decreaseQuantidadeVariavel()" class="bg-purple-700 hover:bg-purple-600 w-12 h-12 rounded-lg text-2xl font-bold transition">
                                         -
                                     </button>
-                                    <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="10" 
-                                           class="bg-purple-900/50 border-2 border-purple-500 rounded-lg px-6 py-3 text-center text-2xl font-bold w-24"
-                                           onchange="calculateTotal()">
-                                    <button type="button" onclick="increaseQuantity()" class="bg-purple-700 hover:bg-purple-600 w-12 h-12 rounded-lg text-2xl font-bold transition">
+                                    <input type="number" id="quantidade-variavel" value="1" min="1" max="5" readonly
+                                           class="bg-purple-900/50 border-2 border-purple-500 rounded-lg px-6 py-3 text-center text-2xl font-bold w-24">
+                                    <button type="button" onclick="increaseQuantidadeVariavel()" class="bg-purple-700 hover:bg-purple-600 w-12 h-12 rounded-lg text-2xl font-bold transition">
                                         +
                                     </button>
                                 </div>
-                                <p class="text-sm text-purple-300 mt-2">
-                                    💡 Dica: Quanto mais tiragens, maior o desconto!
+                                <p class="text-sm text-purple-300 mt-3 text-center" id="quantidade-info">
+                                    Valor por pergunta: R$ 70
                                 </p>
-                                
-                                <!-- Info de Desconto -->
-                                <div class="mt-4 bg-green-900/30 border border-green-500/50 rounded-lg p-4">
-                                    <h4 class="font-bold text-green-400 mb-2">Descontos Progressivos:</h4>
-                                    <ul class="text-sm text-green-200 space-y-1">
-                                        <li>• 2-3 tiragens: 5% de desconto</li>
-                                        <li>• 4-5 tiragens: 10% de desconto</li>
-                                        <li>• 6+ tiragens: 15% de desconto</li>
-                                    </ul>
-                                </div>
                             </div>
+                        </div>
 
-                            <!-- Opção Emergencial -->
+                        <!-- Opção Emergencial -->
+                        <div class="max-w-2xl mx-auto">
                             <div>
-                                <label class="block text-xl font-bold mb-4">
-                                    Opções Adicionais
-                                </label>
                                 <div class="bg-pink-900/30 border-2 border-pink-500/50 rounded-xl p-6">
                                     <div class="flex items-start gap-3">
                                         <input type="checkbox" id="emergencial" name="emergencial" 
@@ -248,7 +273,7 @@
                         </div>
 
                         <!-- Resumo do Pedido -->
-                        <div class="mt-8 bg-purple-950/60 rounded-2xl p-6 border-2 border-purple-400">
+                        <div id="resumo-pedido" class="mt-8 bg-purple-950/60 rounded-2xl p-6 border-2 border-purple-400 max-w-2xl mx-auto">
                             <h3 class="text-2xl font-bold mb-4 text-center">📊 Resumo do Pedido</h3>
                             <div class="space-y-3 text-lg">
                                 <div class="flex justify-between">
@@ -256,20 +281,12 @@
                                     <span class="font-bold" id="resumo-tipo">-</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-purple-300">Quantidade:</span>
-                                    <span class="font-bold" id="resumo-quantidade">0</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-purple-300">Valor Unitário:</span>
+                                    <span class="text-purple-300">Valor:</span>
                                     <span class="font-bold" id="resumo-unitario">R$ 0,00</span>
                                 </div>
-                                <div class="flex justify-between text-green-400" id="desconto-row" style="display: none;">
-                                    <span>Desconto:</span>
-                                    <span class="font-bold" id="resumo-desconto">0%</span>
-                                </div>
                                 <div class="flex justify-between text-pink-400" id="emergencial-row" style="display: none;">
-                                    <span>Emergencial (2x):</span>
-                                    <span class="font-bold">✓ Ativo</span>
+                                    <span>Atendimento Emergencial:</span>
+                                    <span class="font-bold" id="resumo-emergencial">+R$ 0,00</span>
                                 </div>
                                 <hr class="border-purple-500">
                                 <div class="flex justify-between text-2xl font-bold text-purple-300">
@@ -316,13 +333,40 @@
                             </div>
 
                             <div class="md:col-span-2">
-                                <label for="pergunta" class="block text-lg font-bold mb-2">Sua Pergunta ou Situação *</label>
-                                <textarea id="pergunta" name="pergunta" required rows="5"
-                                          class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-3 focus:border-purple-400 focus:outline-none"
-                                          placeholder="Descreva sua dúvida ou situação que gostaria de esclarecer através das cartas..."></textarea>
-                                <p class="text-sm text-purple-300 mt-2">
-                                    💬 Quanto mais detalhes, melhor será a leitura personalizada!
-                                </p>
+                                <label for="cpf" class="block text-lg font-bold mb-2">
+                                    CPF *
+                                    <span class="text-sm font-normal text-purple-300">(para emissão da nota fiscal)</span>
+                                </label>
+                                <input type="text" id="cpf" name="cpf" required 
+                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-3 focus:border-purple-400 focus:outline-none"
+                                       placeholder="000.000.000-00">
+                            </div>
+
+                            <div class="md:col-span-2 mt-6 -mb-4">
+                                <h3 class="text-xl font-bold text-purple-300">
+                                    Endereço <span class="text-sm font-normal">(para emissão da nota fiscal)</span>
+                                </h3>
+                            </div>
+
+                            <div>
+                                <label for="rua" class="block text-lg font-bold mb-2">Rua *</label>
+                                <input type="text" id="rua" name="rua" required 
+                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-3 focus:border-purple-400 focus:outline-none"
+                                       placeholder="Nome da rua">
+                            </div>
+
+                            <div>
+                                <label for="numero" class="block text-lg font-bold mb-2">Número *</label>
+                                <input type="text" id="numero" name="numero" required 
+                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-3 focus:border-purple-400 focus:outline-none"
+                                       placeholder="Nº">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="cep" class="block text-lg font-bold mb-2">CEP *</label>
+                                <input type="text" id="cep" name="cep" required 
+                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-3 focus:border-purple-400 focus:outline-none"
+                                       placeholder="00000-000">
                             </div>
                         </div>
                     </div>
@@ -382,9 +426,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-purple-500/30 py-8" style="background: rgba(39, 38, 78, 0.8);">
+    <footer class="border-t border-purple-500/30 py-4" style="background: rgba(39, 38, 78, 0.8);">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-purple-300 mb-4">
+            <p class="text-purple-300 text-sm mb-0">
                 © Melissa Cartomancia. Todos os direitos reservados.
             </p>
         </div>

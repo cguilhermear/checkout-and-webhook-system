@@ -3,13 +3,18 @@
 // ========================================
 let tipoTiragemSelecionado = null;
 let precoUnitarioBase = 0;
+let quantidadeVariavel = 1;
+let tabelaPrecos = {
+    'pergunta-avulsa': [70, 132, 189, 240, 275],  // 1 a 5 perguntas
+    'templo-afrodite': [165, 298, 445]  // 1 a 3 templos
+};
 let nomesTiragens = {
-    'amor': 'Tiragem do Amor',
-    'carreira': 'Tiragem de Carreira',
-    'espiritual': 'Tiragem Espiritual',
-    'geral': 'Tiragem Geral',
-    'temporal': 'Passado/Presente/Futuro',
-    'decisao': 'Tiragem de Decisão'
+    'pergunta-avulsa': 'Pergunta Avulsa',
+    'templo-afrodite': 'Templo de Afrodite',
+    'carta-canalizada': 'Carta Canalizada',
+    'previsao-anual': 'Previsão Anual',
+    'previsao-mensal': 'Previsão Mensal',
+    'tem-traicao': 'Tem Traição?'
 };
 
 // ========================================
@@ -61,10 +66,34 @@ function selectTiragem(tipo, preco, elemento) {
     // Atualiza variáveis globais
     tipoTiragemSelecionado = tipo;
     precoUnitarioBase = preco;
+    quantidadeVariavel = 1;
     
     // Atualiza campos hidden
     document.getElementById('selected-tiragem').value = tipo;
     document.getElementById('preco-unitario').value = preco;
+    
+    // Mostra/esconde seletor de quantidade baseado no tipo
+    const quantidadeSelector = document.getElementById('quantidade-selector');
+    const quantidadeLabel = document.getElementById('quantidade-label');
+    const quantidadeInfo = document.getElementById('quantidade-info');
+    const quantidadeInput = document.getElementById('quantidade-variavel');
+    
+    if (tipo === 'pergunta-avulsa' || tipo === 'templo-afrodite') {
+        quantidadeSelector.style.display = 'block';
+        quantidadeInput.value = 1;
+        
+        if (tipo === 'pergunta-avulsa') {
+            quantidadeLabel.textContent = 'Quantas perguntas você deseja?';
+            quantidadeInput.max = 5;
+            quantidadeInfo.innerHTML = '1 pergunta: R$ 70 | 2: R$ 132 | 3: R$ 189 | 4: R$ 240 | 5: R$ 275';
+        } else {
+            quantidadeLabel.textContent = 'Quantos templos você deseja?';
+            quantidadeInput.max = 3;
+            quantidadeInfo.innerHTML = '1 templo: R$ 165 | 2: R$ 298 | 3: R$ 445';
+        }
+    } else {
+        quantidadeSelector.style.display = 'none';
+    }
     
     // Atualiza resumo
     document.getElementById('resumo-tipo').textContent = nomesTiragens[tipo];
@@ -72,13 +101,40 @@ function selectTiragem(tipo, preco, elemento) {
     // Recalcula total
     calculateTotal();
     
-    // Scroll suave para a próxima seção
+    // Scroll suave para a seção de opções
     setTimeout(() => {
-        document.querySelector('[class*="from-indigo-800"]').scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
+        const opcoesSecao = document.querySelector('.bg-gradient-to-br.from-indigo-800\\/40');
+        if (opcoesSecao) {
+            opcoesSecao.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
     }, 300);
+}
+
+// ========================================
+// CONTROLE DE QUANTIDADE VARIÁVEL
+// ========================================
+function increaseQuantidadeVariavel() {
+    const input = document.getElementById('quantidade-variavel');
+    const max = parseInt(input.max);
+    let value = parseInt(input.value);
+    if (value < max) {
+        input.value = value + 1;
+        quantidadeVariavel = value + 1;
+        calculateTotal();
+    }
+}
+
+function decreaseQuantidadeVariavel() {
+    const input = document.getElementById('quantidade-variavel');
+    let value = parseInt(input.value);
+    if (value > 1) {
+        input.value = value - 1;
+        quantidadeVariavel = value - 1;
+        calculateTotal();
+    }
 }
 
 // ========================================
@@ -111,48 +167,35 @@ function calculateTotal() {
         return;
     }
 
-    // Pega a quantidade
-    const quantidade = parseInt(document.getElementById('quantidade').value) || 0;
+    // Calcula preço base
+    let precoBase = precoUnitarioBase;
+    
+    // Se for pergunta-avulsa ou templo-afrodite, usa tabela de preços
+    if (tipoTiragemSelecionado === 'pergunta-avulsa' || tipoTiragemSelecionado === 'templo-afrodite') {
+        const tabela = tabelaPrecos[tipoTiragemSelecionado];
+        precoBase = tabela[quantidadeVariavel - 1];
+    }
+    
     const emergencial = document.getElementById('emergencial').checked;
 
-    // Calcula desconto por volume
-    let desconto = 0;
-    if (quantidade >= 6) {
-        desconto = 0.15; // 15%
-    } else if (quantidade >= 4) {
-        desconto = 0.10; // 10%
-    } else if (quantidade >= 2) {
-        desconto = 0.05; // 5%
-    }
-
-    // Calcula preço com desconto
-    let precoUnitario = precoUnitarioBase * (1 - desconto);
-
     // Aplica emergencial (dobra o valor)
+    let precoFinal = precoBase;
     if (emergencial) {
-        precoUnitario = precoUnitario * 2;
+        precoFinal = precoBase * 2;
     }
-
-    // Calcula total
-    const total = precoUnitario * quantidade;
 
     // Atualiza resumo
-    document.getElementById('resumo-quantidade').textContent = quantidade;
-    document.getElementById('resumo-unitario').textContent = formatarMoeda(precoUnitario);
-    document.getElementById('total-preco').textContent = formatarMoeda(total);
+    document.getElementById('resumo-unitario').textContent = formatarMoeda(precoBase);
+    document.getElementById('total-preco').textContent = formatarMoeda(precoFinal);
 
-    // Mostra/esconde linha de desconto
-    const descontoRow = document.getElementById('desconto-row');
-    if (desconto > 0) {
-        descontoRow.style.display = 'flex';
-        document.getElementById('resumo-desconto').textContent = '-' + (desconto * 100) + '%';
-    } else {
-        descontoRow.style.display = 'none';
-    }
-
-    // Mostra/esconde linha de emergencial
+    // Mostra/esconde linha emergencial
     const emergencialRow = document.getElementById('emergencial-row');
-    emergencialRow.style.display = emergencial ? 'flex' : 'none';
+    if (emergencial) {
+        emergencialRow.style.display = 'flex';
+        document.getElementById('resumo-emergencial').textContent = '+' + formatarMoeda(precoBase);
+    } else {
+        emergencialRow.style.display = 'none';
+    }
 }
 
 // ========================================
