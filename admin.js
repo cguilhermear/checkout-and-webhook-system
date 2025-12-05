@@ -179,25 +179,29 @@ function carregarTiragens() {
                 tipoExibido += ` (${tiragem.quantidade})`;
             }
 
-            const row = `
-                <tr class="border-b border-purple-500/20 hover:bg-purple-900/20 transition">
-                    <td class="py-3 px-4 whitespace-nowrap">${formatarData(tiragem.data)}</td>
-                    <td class="py-3 px-4">${tiragem.nome}</td>
-                    <td class="py-3 px-4 whitespace-nowrap">${tiragem.cpf}</td>
-                    <td class="py-3 px-4">${tipoExibido}</td>
-                    <td class="py-3 px-4 font-bold whitespace-nowrap">R$ ${tiragem.valor}</td>
-                    <td class="py-3 px-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap ${statusClass}">
-                            ${statusTexto}
-                        </span>
-                    </td>
-                    <td class="py-3 px-4 whitespace-nowrap">
-                        <button onclick="verDetalhes(${tiragem.id})" class="text-purple-400 hover:text-purple-300 font-bold">
-                            👁️ Ver
-                        </button>
-                    </td>
-                </tr>
-            `;
+                const row = `
+                    <tr class="border-b border-purple-500/20 hover:bg-purple-900/20 transition">
+                        <td class="py-3 px-4 whitespace-nowrap">${formatarData(tiragem.data)}</td>
+                        <td class="py-3 px-4">${tiragem.nome}</td>
+                        <td class="py-3 px-4 whitespace-nowrap">${tiragem.cpf}</td>
+                        <td class="py-3 px-4">${tiragem.cidade || ''}</td>
+                        <td class="py-3 px-4">${tiragem.rua || ''}</td>
+                        <td class="py-3 px-4">${tiragem.numero || ''}</td>
+                        <td class="py-3 px-4">${tiragem.cep || ''}</td>
+                        <td class="py-3 px-4">${tipoExibido}</td>
+                        <td class="py-3 px-4 font-bold whitespace-nowrap">R$ ${tiragem.valor}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap ${statusClass}">
+                                ${statusTexto}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 whitespace-nowrap">
+                            <button onclick="verDetalhes(${tiragem.id})" class="text-purple-400 hover:text-purple-300 font-bold">
+                                👁️ Ver
+                            </button>
+                        </td>
+                    </tr>
+                `;
             tabela.innerHTML += row;
         });
     }
