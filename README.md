@@ -1,190 +1,292 @@
-# 🔮 Site de Cartomancia - Front-End
+# 🔮 Melissa Cartomancia - Site Profissional
 
-Site profissional para atendimento de cartomancia com design moderno em tons de roxo.
+Site profissional e moderno para atendimentos de cartomancia online com design místico em tons de roxo e animações interativas.
 
 ## 📋 Estrutura do Projeto
 
 ```
 site_cartomante/
-├── index.html              # Página inicial
-├── biografia.html          # Página sobre a cartomante
-├── passo-a-passo.html     # Como funciona o processo
+├── index.html              # Página inicial completa
 ├── tiragens.html          # Formulário de solicitação
-├── tiragens.js            # Lógica JavaScript
+├── admin.html             # Painel administrativo
+├── login.html             # Login do admin
+├── tiragens.js            # Lógica do formulário
+├── admin.js               # Lógica do painel admin
+├── tarot-cards.js         # Sistema de carta do dia
+├── IMG_0418.JPG           # Foto da Melissa
 └── README.md              # Este arquivo
 ```
 
-## ✨ Funcionalidades Implementadas
+## ✨ Funcionalidades Principais
 
 ### 🏠 Página Inicial (index.html)
-- Hero section com animação de estrelas
-- 3 cards principais: Biografia, Passo a Passo e Solicitar Tiragem
-- Design responsivo
-- Menu de navegação fixo
 
-### 👤 Biografia (biografia.html)
-- Seção de introdução com placeholder para foto
-- História da cartomante
-- Áreas de especialidade
-- Design elegante com gradientes roxos
+#### Hero Section
+- Animação de estrelas em movimento
+- 3 cartas de tarô animadas com efeito float
+- **Carta do Dia Aleatória** centralizada com dados dinâmicos
+- Títulos com efeito glow
+- Design totalmente responsivo
 
-### 📚 Passo a Passo (passo-a-passo.html)
-- 6 passos detalhados do processo
-- Seção para vídeo explicativo
-- Perguntas frequentes (FAQ)
-- Garantias de segurança
+#### Seção "Como Funciona"
+- **Desktop:** 4 cards em linha horizontal com setas indicativas entre eles
+- **Mobile:** Scroll horizontal com snap automático
+- Cards com design de cartas de tarô
+- Numeração romana com progresso (I/IV, II/IV, etc.)
+- Ícones ilustrativos para cada etapa
+- Textos descritivos claros e concisos
 
-### 🔮 Tiragens (tiragens.html + tiragens.js)
-**6 Tipos de Tiragens:**
-1. ❤️ Tiragem do Amor - R$ 50,00
-2. 💼 Tiragem de Carreira - R$ 50,00
-3. 🌟 Tiragem Espiritual - R$ 60,00
-4. 🔮 Tiragem Geral - R$ 45,00
-5. ⏳ Passado/Presente/Futuro - R$ 55,00
-6. ⚖️ Tiragem de Decisão - R$ 55,00
+**Passos:**
+1. 📋 Escolha sua tiragem
+2. ✍️ Preencha o formulário (informe seus dados)
+3. 💳 Realize o pagamento (Mercado Pago)
+4. 📱 Receba sua leitura em 24 horas pelo WhatsApp
 
-**Funcionalidades:**
-- ✅ Seleção de tipo de tiragem com destaque visual
-- ✅ Seletor de quantidade com botões +/-
-- ✅ Cálculo automático de desconto progressivo:
+#### Seção "Sobre a Melissa"
+- Foto profissional (IMG_0418.JPG)
+- Biografia completa e personalizada
+- Informações sobre oráculos utilizados (Tarô, Baralho Cigano, Sibila)
+- Detalhes de atendimento (online, segunda a sexta)
+- Estatísticas visuais (10+ anos, 500+ consultas)
+- Elementos decorativos com blur
+
+### 🔮 Página de Tiragens (tiragens.html + tiragens.js)
+
+**6 Tipos de Tiragens Disponíveis:**
+1. ❤️ **Tiragem do Amor** - R$ 50,00
+2. 💼 **Tiragem de Carreira** - R$ 50,00
+3. 🌟 **Tiragem Espiritual** - R$ 60,00
+4. 🔮 **Tiragem Geral** - R$ 45,00
+5. ⏳ **Passado/Presente/Futuro** - R$ 55,00
+6. ⚖️ **Tiragem de Decisão** - R$ 55,00
+
+**Funcionalidades Avançadas:**
+- ✅ Seleção visual de tiragem com destaque
+- ✅ Contador de quantidade (+/-)
+- ✅ **Sistema de Desconto Progressivo:**
   - 2-3 tiragens: 5% off
   - 4-5 tiragens: 10% off
   - 6+ tiragens: 15% off
-- ✅ Opção "Emergencial" (2x o valor)
-- ✅ Resumo do pedido em tempo real
-- ✅ Formulário completo de dados pessoais
-- ✅ Máscara automática para telefone
-- ✅ Validações de formulário
+- ✅ Opção "Emergencial" (duplica o valor)
+- ✅ Cálculo automático em tempo real
+- ✅ **Formulário Completo:**
+  - Nome completo*
+  - Data de nascimento*
+  - WhatsApp (com máscara automática)
+  - E-mail
+  - CPF* (para nota fiscal)
+  - Cidade*
+  - Rua, Número, CEP (opcionais, em grid 3 colunas)
+  - Pergunta/Situação (textarea)
+- ✅ Validações inteligentes
 - ✅ Modal de aviso legal
-- ✅ Redirecionamento automático para WhatsApp
+- ✅ Geração automática de mensagem para WhatsApp
 
-## 🎨 Design
+### 🛡️ Painel Administrativo (admin.html + admin.js)
+
+**Sistema Completo de Gerenciamento:**
+- 🔐 Tela de login (login.html)
+- 📊 Dashboard com estatísticas
+- 📋 Tabela de pedidos com colunas:
+  - Data, Nome, CPF, Cidade
+  - Rua, Número, CEP
+  - Tipo de tiragem, Valor, Status
+  - Ações (Ver Detalhes, Concluir, Excluir)
+- 🔍 Sistema de busca/filtro
+- 💾 Mock de dados para demonstração
+- 🎨 Interface consistente com o tema roxo místico
+
+### ⭐ Sistema de Carta do Dia (tarot-cards.js)
+
+**22 Arcanos Maiores do Tarô:**
+- Dados completos de cada carta (nome, palavras-chave, ícone)
+- Seleção aleatória diária
+- Animação suave de troca
+- Renderização dinâmica no hero section
+
+## 🎨 Design e Identidade Visual
 
 ### Paleta de Cores
 - **Roxo Principal:** #9333ea, #a855f7, #c084fc
-- **Roxo Escuro:** #581c87, #6b21a8, #7e22ce
-- **Rosa:** #c77dff
-- **Índigo:** Variações de azul-roxo
+- **Roxo Escuro:** #581c87, #6b21a8, #7e22ce  
+- **Índigo:** #4f46e5, #6366f1, #818cf8
+- **Ciano/Teal:** Para variações de cards
+- **Rosa:** #ec4899, #f472b6 (acentos)
 
 ### Tipografia
-- **Títulos:** Cinzel (Serif)
-- **Corpo:** Raleway (Sans-serif)
+- **Títulos:** Cinzel (Serif) - elegante e místico
+- **Corpo:** Raleway (Sans-serif) - moderno e legível
+- Tamanhos responsivos com classes Tailwind
 
 ### Efeitos Especiais
-- Gradientes suaves
-- Animação de estrelas no fundo
-- Efeitos de hover nos cards
-- Text-glow nos títulos principais
-- Transições suaves
+- ✨ Animação de estrelas infinita
+- 💫 Cards com efeito "gentleFloat"
+- 🌟 Text-glow nos títulos principais
+- 🎴 Aspect-ratio 2:3 para cards (proporção de cartas de tarô)
+- 🔮 Gradientes suaves e multi-camadas
+- 🎭 Transições suaves em hovers
+- 📱 Scroll horizontal com snap no mobile
+- 🚫 Scrollbar oculta mantendo funcionalidade
+
+### Responsividade
+- **Mobile First:** Design otimizado para celular
+- **Breakpoints:**
+  - Mobile: < 768px (scroll horizontal)
+  - Desktop: ≥ 1024px (layout em linha)
+- **Cards adaptáveis:**
+  - Mobile: w-48 (192px)
+  - Desktop: max-w-xl com container max-w-7xl
+- **Textos escaláveis:** text-xs até text-6xl com classes md:/lg:
 
 ## 🚀 Como Usar
 
-### 1. Abrir o Site
-Basta abrir o arquivo `index.html` em qualquer navegador moderno.
+### 1. Configuração Inicial
 
-### 2. Personalizar Conteúdo
-
-#### Textos da Biografia:
-No arquivo `biografia.html`, localize e edite:
-```html
-<p class="text-lg text-purple-200 mb-4 leading-relaxed">
-    Meu nome é [Seu Nome]...
-```
-
-#### Adicionar Foto:
-Coloque sua foto na pasta e substitua:
-```html
-<img src="caminho/para/sua-foto.jpg" alt="Cartomante">
-```
-
-#### Adicionar Vídeo:
-No arquivo `passo-a-passo.html`, substitua o placeholder:
-```html
-<iframe src="https://www.youtube.com/embed/SEU_VIDEO_ID" ...></iframe>
-```
-
-#### Configurar WhatsApp:
-No arquivo `tiragens.js`, altere o número:
+#### Número do WhatsApp:
+No arquivo `tiragens.js`, linha ~200:
 ```javascript
-const numeroWhatsApp = '5511999999999'; // SEU NÚMERO AQUI
+const numeroWhatsApp = '5511999999999'; // ALTERE AQUI
 ```
 
-### 3. Ajustar Preços
-No arquivo `tiragens.html`, você pode alterar os valores:
+#### Foto da Melissa:
+Substitua `IMG_0418.JPG` por sua foto ou altere o nome em `index.html`:
+```html
+<img src="SUA_FOTO.jpg" alt="Melissa Cartomante" class="w-full h-full object-cover">
+```
+
+#### Textos Personalizados:
+Edite diretamente em `index.html`:
+- Biografia (seção #sobre-melissa)
+- Descrições das tiragens
+- Avisos legais
+
+### 2. Ajustar Valores e Descontos
+
+#### Preços das Tiragens:
+Em `tiragens.html`, na função `selectTiragem()`:
 ```html
 onclick="selectTiragem('amor', 50, this)"
-                      ↑ nome  ↑ preço
+                      ↑ tipo  ↑ preço
 ```
 
-### 4. Modificar Descontos
-No arquivo `tiragens.js`, função `calculateTotal()`:
+#### Descontos Progressivos:
+Em `tiragens.js`, função `calculateTotal()`:
 ```javascript
-if (quantidade >= 6) {
-    desconto = 0.15; // 15% - Você pode alterar aqui
-}
+if (quantidade >= 6) desconto = 0.15; // 15% off
+else if (quantidade >= 4) desconto = 0.10; // 10% off
+else if (quantidade >= 2) desconto = 0.05; // 5% off
 ```
 
-## 📱 Responsividade
+### 3. Personalizar Cartas do Dia
 
-O site é totalmente responsivo e funciona em:
-- 📱 Smartphones
-- 📱 Tablets
-- 💻 Desktops
-- 🖥️ Monitores grandes
+Edite `tarot-cards.js` para adicionar/modificar cartas:
+```javascript
+const tarotCards = [
+    {
+        number: "0",
+        name: "O LOUCO",
+        keywords: "Novos começos • Liberdade • Aventura",
+        icon: `<svg>...</svg>`
+    },
+    // ... adicione mais cartas
+];
+```
 
-## 🔧 Tecnologias Utilizadas
+## 📱 Tecnologias e Ferramentas
 
-- **HTML5** - Estrutura
-- **Tailwind CSS** (via CDN) - Estilização
-- **JavaScript Vanilla** - Interatividade
-- **Google Fonts** - Tipografia
+- **HTML5** - Estrutura semântica
+- **Tailwind CSS 3.x** (CDN) - Framework CSS utility-first
+- **JavaScript Vanilla** - Sem dependências externas
+- **Google Fonts** - Cinzel + Raleway
+- **SVG Icons** - Ícones personalizados inline
+- **CSS Animations** - @keyframes para efeitos
+- **Responsive Design** - Mobile-first approach
 
 ## 🎯 Próximos Passos (Backend)
 
-Para implementação completa, você precisará:
+### Integração Necessária:
 
-1. **Integração com Mercado Pago:**
-   - Criar conta no Mercado Pago
-   - Obter credenciais de API
-   - Implementar checkout
+1. **Mercado Pago API:**
+   ```javascript
+   // Implementar checkout
+   mp.checkout({
+       preference: {
+           items: [{
+               title: tiragemSelecionada,
+               quantity: quantidade,
+               unit_price: valorTotal
+           }]
+       }
+   });
+   ```
 
 2. **Banco de Dados:**
-   - Armazenar pedidos
-   - Histórico de clientes
-   - Registros de pagamento
+   - MongoDB ou PostgreSQL
+   - Schemas: Users, Orders, Payments
+   - Relacionamentos e índices
 
-3. **Painel Administrativo:**
-   - Visualizar pedidos
-   - Gerenciar tiragens
-   - Estatísticas
+3. **Backend Node.js/Express:**
+   - Rotas de API RESTful
+   - Autenticação JWT
+   - Middleware de validação
+   - Integração com Mercado Pago Webhooks
 
-4. **E-mail Automático:**
-   - Confirmação de pedido
-   - Notificação de pagamento
+4. **Sistema de Notificações:**
+   - WhatsApp API (Twilio/Evolution API)
+   - E-mails transacionais (SendGrid/Nodemailer)
+   - Confirmações automáticas
 
-## ⚠️ Importante
+5. **Painel Admin Real:**
+   - Substituir mock por API calls
+   - Autenticação robusta
+   - Logs de auditoria
+   - Relatórios e analytics
 
-### Antes de publicar:
-1. ✅ Substitua todos os textos de exemplo
-2. ✅ Adicione suas próprias fotos
-3. ✅ Configure o número do WhatsApp
-4. ✅ Ajuste preços conforme desejado
-5. ✅ Adicione seu vídeo explicativo
-6. ✅ Teste em diferentes dispositivos
-7. ✅ Configure SSL/HTTPS quando hospedar
+## ⚠️ Checklist Pré-Lançamento
 
-### Aviso Legal:
-O site já inclui avisos legais conforme normas de transparência, mas consulte um advogado para adequação às leis locais.
+- [ ] ✅ Trocar número do WhatsApp
+- [ ] ✅ Adicionar foto profissional
+- [ ] ✅ Revisar todos os textos
+- [ ] ✅ Testar formulário completo
+- [ ] ✅ Validar cálculos de desconto
+- [ ] ✅ Testar em múltiplos dispositivos
+- [ ] ✅ Verificar responsividade (mobile/tablet/desktop)
+- [ ] ✅ Configurar domínio e SSL
+- [ ] ✅ Implementar backend (pagamentos)
+- [ ] ✅ Adicionar analytics (Google Analytics)
+- [ ] ✅ Política de privacidade/LGPD
+- [ ] ✅ Termos de uso detalhados
 
-## 📞 Suporte
+## 📊 Arquivos e Funcionalidades
 
-Para dúvidas sobre customização ou implementação, você pode:
-- Consultar a documentação do Tailwind CSS
-- Modificar os arquivos conforme necessário
-- Testar localmente antes de publicar
+| Arquivo | Tamanho | Funcionalidade Principal |
+|---------|---------|-------------------------|
+| index.html | ~25KB | Página inicial completa |
+| tiragens.html | ~15KB | Formulário de pedidos |
+| admin.html | ~10KB | Interface administrativa |
+| tiragens.js | ~8KB | Lógica do formulário |
+| admin.js | ~12KB | Gerenciamento de pedidos |
+| tarot-cards.js | ~15KB | Sistema de carta do dia |
+
+## 🔒 Segurança
+
+- ✅ Validação client-side (JavaScript)
+- ⚠️ Implementar validação server-side
+- ⚠️ Sanitização de inputs
+- ⚠️ Proteção CSRF
+- ⚠️ Rate limiting
+- ⚠️ HTTPS obrigatório em produção
+
+## 📞 Suporte e Documentação
+
+- **Tailwind CSS:** https://tailwindcss.com/docs
+- **Mercado Pago:** https://www.mercadopago.com.br/developers
+- **WhatsApp API:** https://www.twilio.com/whatsapp
 
 ---
 
-**Desenvolvido com 💜 e ✨**
+**Desenvolvido com 💜✨ por stwinfobx**
 
-*Site de Cartomancia Profissional - Front-End Completo*
+*Melissa Cartomancia - Clareza e Acolhimento para sua Jornada*
+
+🔮 Versão 2.0 - Janeiro 2025
