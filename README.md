@@ -53,12 +53,24 @@ site_cartomante/
 ### 🔮 Página de Tiragens (tiragens.html + tiragens.js)
 
 **6 Tipos de Tiragens Disponíveis:**
-1. ❤️ **Tiragem do Amor** - R$ 50,00
-2. 💼 **Tiragem de Carreira** - R$ 50,00
-3. 🌟 **Tiragem Espiritual** - R$ 60,00
-4. 🔮 **Tiragem Geral** - R$ 45,00
-5. ⏳ **Passado/Presente/Futuro** - R$ 55,00
-6. ⚖️ **Tiragem de Decisão** - R$ 55,00
+1. ❓ **Pergunta Avulsa** - A partir de R$ 70,00
+   - Método flexível que melhor responde sua pergunta
+   - Não responde sobre traição
+2. 🏛️ **Templo de Afrodite** - A partir de R$ 165,00
+   - Pensamentos e sentimentos de ambos
+   - Intenções e momento atual da relação
+3. 💌 **Carta Canalizada** - R$ 200,00
+   - Carta escrita como se viesse da pessoa amada
+   - Revela pensamentos e sentimentos ocultos
+4. 📅 **Previsão Anual** - R$ 400,00
+   - Energias dos próximos 12 meses
+   - Tendências e oportunidades de cada fase
+5. 🗓️ **Previsão Mensal** - R$ 130,00
+   - Energias de cada semana do mês
+   - Orientações para o mês seguinte
+6. 💔 **Tem Traição?** - R$ 280,00
+   - Revela interferências de terceiros
+   - Verdade sobre a outra relação
 
 **Funcionalidades Avançadas:**
 - ✅ Seleção visual de tiragem com destaque
@@ -165,9 +177,17 @@ Edite diretamente em `index.html`:
 #### Preços das Tiragens:
 Em `tiragens.html`, na função `selectTiragem()`:
 ```html
-onclick="selectTiragem('amor', 50, this)"
-                      ↑ tipo  ↑ preço
+onclick="selectTiragem('pergunta-avulsa', 70, this)"
+                      ↑ tipo           ↑ preço
 ```
+
+Tiragens disponíveis:
+- `'pergunta-avulsa'` - R$ 70
+- `'templo-afrodite'` - R$ 165
+- `'carta-canalizada'` - R$ 200
+- `'previsao-anual'` - R$ 400
+- `'previsao-mensal'` - R$ 130
+- `'tem-traicao'` - R$ 280
 
 #### Descontos Progressivos:
 Em `tiragens.js`, função `calculateTotal()`:
