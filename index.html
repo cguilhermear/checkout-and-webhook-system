@@ -143,6 +143,16 @@
         .card-glow {
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
         }
+        
+        /* Ocultar scrollbar mas manter funcionalidade */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white" style="background: linear-gradient(135deg, #181349 0%, #0f0d2e 50%, #181349 100%);">
@@ -295,14 +305,15 @@
                 </p>
             </div>
 
-            <!-- Passos -->
-            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                <!-- Passo 1 - Carta de Tarô -->
-                <a href="tiragens.html" class="relative group perspective max-w-xs mx-auto md:max-w-none">
+            <!-- Passos com flechas no desktop -->
+            <div class="max-w-7xl mx-auto">
+                <!-- Desktop: flex-row com flechas -->
+                <div class="hidden lg:flex items-center justify-center gap-6 md:gap-8">
+                <a href="tiragens.html" class="relative group perspective w-full max-w-xl mx-auto">
                     <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-purple-400/70 overflow-hidden backdrop-blur transition-all duration-300 hover:transform hover:scale-105 hover:shadow-purple-500/50 cursor-pointer">
-                        <div class="h-full bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-800/95 p-4 md:p-6 flex flex-col justify-between">
+                        <div class="h-full bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-800/95 p-6 md:p-8 flex flex-col justify-between">
                             <div class="text-center">
-                                <div class="text-xs text-purple-200 font-cinzel mb-2 md:mb-3">I</div>
+                                <div class="text-sm md:text-base text-purple-200 font-cinzel mb-2 md:mb-3 font-bold">I / IV</div>
                                 <div class="w-full h-16 md:h-24 flex items-center justify-center mb-2 md:mb-4">
                                     <svg class="w-12 h-12 md:w-16 md:h-16 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
@@ -310,19 +321,18 @@
                                 </div>
                                 <div class="text-base md:text-lg text-white font-cinzel font-bold mb-2 md:mb-3">ESCOLHA SUA TIRAGEM</div>
                                 <p class="text-xs text-purple-200 px-2 leading-relaxed">
-                                    Selecione o tipo de leitura ideal para sua questão: amor, carreira, espiritual ou geral.
+                                    Selecione o tipo de leitura ideal para você.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </a>
-
-                <!-- Passo 2 - Carta de Tarô -->
-                <a href="tiragens.html" class="relative group perspective max-w-xs mx-auto md:max-w-none">
+                <span class="hidden lg:flex text-4xl text-purple-400 mx-2"><svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+                <a href="tiragens.html" class="relative group perspective w-full max-w-xl mx-auto">
                     <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-indigo-400/70 overflow-hidden backdrop-blur transition-all duration-300 hover:transform hover:scale-105 hover:shadow-indigo-500/50 cursor-pointer">
-                        <div class="h-full bg-gradient-to-br from-indigo-900/95 via-blue-900/95 to-indigo-800/95 p-4 md:p-6 flex flex-col justify-between">
+                        <div class="h-full bg-gradient-to-br from-indigo-900/95 via-blue-900/95 to-indigo-800/95 p-6 md:p-8 flex flex-col justify-between">
                             <div class="text-center">
-                                <div class="text-xs text-indigo-200 font-cinzel mb-2 md:mb-3">II</div>
+                                <div class="text-sm md:text-base text-indigo-200 font-cinzel mb-2 md:mb-3 font-bold">II / IV</div>
                                 <div class="w-full h-16 md:h-24 flex items-center justify-center mb-2 md:mb-4">
                                     <svg class="w-12 h-12 md:w-16 md:h-16 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -330,19 +340,18 @@
                                 </div>
                                 <div class="text-base md:text-lg text-white font-cinzel font-bold mb-2 md:mb-3">PREENCHA O FORMULÁRIO</div>
                                 <p class="text-xs text-indigo-200 px-2 leading-relaxed">
-                                    Informe seus dados pessoais e descreva sua questão com detalhes. Quanto mais informações, melhor!
+                                    Informe seus dados.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </a>
-
-                <!-- Passo 3 - Carta de Tarô -->
-                <a href="tiragens.html" class="relative group perspective max-w-xs mx-auto md:max-w-none">
+                <span class="hidden lg:flex text-4xl text-purple-400 mx-2"><svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+                <a href="tiragens.html" class="relative group perspective w-full max-w-xl mx-auto">
                     <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-blue-400/70 overflow-hidden backdrop-blur transition-all duration-300 hover:transform hover:scale-105 hover:shadow-blue-500/50 cursor-pointer">
-                        <div class="h-full bg-gradient-to-br from-blue-900/95 via-cyan-900/95 to-blue-800/95 p-4 md:p-6 flex flex-col justify-between">
+                        <div class="h-full bg-gradient-to-br from-blue-900/95 via-cyan-900/95 to-blue-800/95 p-6 md:p-8 flex flex-col justify-between">
                             <div class="text-center">
-                                <div class="text-xs text-blue-200 font-cinzel mb-2 md:mb-3">III</div>
+                                <div class="text-sm md:text-base text-blue-200 font-cinzel mb-2 md:mb-3 font-bold">III / IV</div>
                                 <div class="w-full h-16 md:h-24 flex items-center justify-center mb-2 md:mb-4">
                                     <svg class="w-12 h-12 md:w-16 md:h-16 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -350,19 +359,18 @@
                                 </div>
                                 <div class="text-base md:text-lg text-white font-cinzel font-bold mb-2 md:mb-3">REALIZE O PAGAMENTO</div>
                                 <p class="text-xs text-blue-200 px-2 leading-relaxed">
-                                    Pagamento 100% seguro via Mercado Pago. PIX, cartão ou boleto - você escolhe!
+                                    Pagamento seguro via Mercado Pago.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </a>
-
-                <!-- Passo 4 - Carta de Tarô -->
-                <a href="tiragens.html" class="relative group perspective max-w-xs mx-auto md:max-w-none">
+                <span class="hidden lg:flex text-4xl text-purple-400 mx-2"><svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+                <a href="tiragens.html" class="relative group perspective w-full max-w-xl mx-auto">
                     <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-cyan-400/70 overflow-hidden backdrop-blur transition-all duration-300 hover:transform hover:scale-105 hover:shadow-cyan-500/50 cursor-pointer">
-                        <div class="h-full bg-gradient-to-br from-cyan-900/95 via-teal-900/95 to-cyan-800/95 p-4 md:p-6 flex flex-col justify-between">
+                        <div class="h-full bg-gradient-to-br from-cyan-900/95 via-teal-900/95 to-cyan-800/95 p-6 md:p-8 flex flex-col justify-between">
                             <div class="text-center">
-                                <div class="text-xs text-cyan-200 font-cinzel mb-2 md:mb-3">IV</div>
+                                <div class="text-sm md:text-base text-cyan-200 font-cinzel mb-2 md:mb-3 font-bold">IV / IV</div>
                                 <div class="w-full h-16 md:h-24 flex items-center justify-center mb-2 md:mb-4">
                                     <svg class="w-12 h-12 md:w-16 md:h-16 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"></path>
@@ -370,12 +378,99 @@
                                 </div>
                                 <div class="text-base md:text-lg text-white font-cinzel font-bold mb-2 md:mb-3">RECEBA SUA LEITURA</div>
                                 <p class="text-xs text-cyan-200 px-2 leading-relaxed">
-                                    Em até 72h, receba sua tiragem completa e personalizada diretamente no seu whatsapp.
+                                    Faça sua pergunta e receba sua tiragem em 24 horas pelo WhatsApp.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </a>
+            </div>
+            
+            <!-- Mobile: scroll horizontal com cards menores -->
+            <div class="lg:hidden overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
+                <div class="flex gap-4 px-4">
+                    <a href="tiragens.html" class="relative group perspective flex-shrink-0 w-48 snap-center">
+                        <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-purple-400/70 overflow-hidden backdrop-blur transition-all duration-300 cursor-pointer">
+                            <div class="h-full bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-800/95 p-4 flex flex-col">
+                                <div class="text-center">
+                                    <div class="text-xs text-purple-200 font-cinzel mb-3 font-bold">I / IV</div>
+                                </div>
+                                <div class="flex-[0.6] flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 text-center flex flex-col justify-start">
+                                    <div class="text-sm text-white font-cinzel font-bold mb-2">ESCOLHA SUA TIRAGEM</div>
+                                    <p class="text-xs text-purple-200 px-1 leading-relaxed">
+                                        Selecione o tipo de leitura ideal para você.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="tiragens.html" class="relative group perspective flex-shrink-0 w-48 snap-center">
+                        <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-indigo-400/70 overflow-hidden backdrop-blur transition-all duration-300 cursor-pointer">
+                            <div class="h-full bg-gradient-to-br from-indigo-900/95 via-blue-900/95 to-indigo-800/95 p-4 flex flex-col">
+                                <div class="text-center">
+                                    <div class="text-xs text-indigo-200 font-cinzel mb-3 font-bold">II / IV</div>
+                                </div>
+                                <div class="flex-[0.6] flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 text-center flex flex-col justify-start">
+                                    <div class="text-sm text-white font-cinzel font-bold mb-2">PREENCHA O FORMULÁRIO</div>
+                                    <p class="text-xs text-indigo-200 px-1 leading-relaxed">
+                                        Informe seus dados.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="tiragens.html" class="relative group perspective flex-shrink-0 w-48 snap-center">
+                        <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-blue-400/70 overflow-hidden backdrop-blur transition-all duration-300 cursor-pointer">
+                            <div class="h-full bg-gradient-to-br from-blue-900/95 via-cyan-900/95 to-blue-800/95 p-4 flex flex-col">
+                                <div class="text-center">
+                                    <div class="text-xs text-blue-200 font-cinzel mb-3 font-bold">III / IV</div>
+                                </div>
+                                <div class="flex-[0.6] flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 text-center flex flex-col justify-start">
+                                    <div class="text-sm text-white font-cinzel font-bold mb-2">REALIZE O PAGAMENTO</div>
+                                    <p class="text-xs text-blue-200 px-1 leading-relaxed">
+                                        Pagamento seguro via Mercado Pago.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="tiragens.html" class="relative group perspective flex-shrink-0 w-48 snap-center">
+                        <div class="w-full aspect-[2/3] bg-black rounded-xl shadow-2xl border-2 border-cyan-400/70 overflow-hidden backdrop-blur transition-all duration-300 cursor-pointer">
+                            <div class="h-full bg-gradient-to-br from-cyan-900/95 via-teal-900/95 to-cyan-800/95 p-4 flex flex-col">
+                                <div class="text-center">
+                                    <div class="text-xs text-cyan-200 font-cinzel mb-3 font-bold">IV / IV</div>
+                                </div>
+                                <div class="flex-[0.6] flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 text-center flex flex-col justify-start">
+                                    <div class="text-sm text-white font-cinzel font-bold mb-2">RECEBA SUA LEITURA</div>
+                                    <p class="text-xs text-cyan-200 px-1 leading-relaxed">
+                                        Faça sua pergunta e receba sua tiragem em 24 horas pelo WhatsApp.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
             </div>
 
             <!-- Banner de Garantia -->
@@ -424,16 +519,9 @@
                     <!-- Foto da Melissa -->
                     <div class="order-2 md:order-1">
                         <div class="relative">
-                            <!-- Placeholder para foto -->
+                            <!-- Foto da Melissa -->
                             <div class="aspect-square rounded-2xl overflow-hidden border-4 border-purple-400/50 shadow-2xl bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur">
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <div class="text-center p-8">
-                                        <svg class="w-32 h-32 text-purple-400/30 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                                        </svg>
-                                        <p class="text-purple-300 text-sm">Foto da Melissa</p>
-                                    </div>
-                                </div>
+                                <img src="IMG_0418.JPG" alt="Melissa Cartomante" class="w-full h-full object-cover">
                             </div>
                             <!-- Elementos decorativos -->
                             <div class="absolute -top-4 -right-4 w-24 h-24 bg-purple-600/20 rounded-full blur-2xl"></div>
