@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Interno - Melissa Cartomancia</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M13.5 2.5L15 7l4.5 1.5L15 10l-1.5 4.5L12 10 7.5 8.5 12 7z'/%3E%3C/svg%3E">
     
     <script>
@@ -33,191 +30,181 @@
             }
         }
     </script>
-    
+
     <style>
         body {
             font-family: 'Raleway', sans-serif;
         }
     </style>
 </head>
+
 <body class="min-h-screen text-white" style="background: linear-gradient(135deg, #181349 0%, #0f0d2e 50%, #181349 100%);">
-    <!-- Header -->
-    <header class="border-b border-purple-500/30 shadow-lg" style="background: rgba(24, 19, 73, 0.95);">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M13.5 2.5L15 7l4.5 1.5L15 10l-1.5 4.5L12 10 7.5 8.5 12 7z"/>
-                    </svg>
-                    <span class="text-2xl font-cinzel font-bold text-white">Sistema Interno</span>
-                </div>
-                <a href="index.html" class="text-purple-300 hover:text-purple-400 transition-colors">
-                    ← Voltar ao Site
-                </a>
+
+<header class="border-b border-purple-500/30 shadow-lg" style="background: rgba(24, 19, 73, 0.95);">
+    <nav class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13.5 2.5L15 7l4.5 1.5L15 10l-1.5 4.5L12 10 7.5 8.5 12 7z"/>
+                </svg>
+                <span class="text-2xl font-cinzel font-bold text-white">Sistema Interno</span>
             </div>
-        </nav>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="max-w-7xl mx-auto">
-            <!-- Título -->
-            <div class="mb-8">
-                <h1 class="text-4xl font-cinzel font-bold mb-2">Histórico de Tiragens</h1>
-                <p class="text-purple-300">Gerencie e consulte todas as tiragens realizadas</p>
-            </div>
-
-            <!-- Layout com Sidebar -->
-            <div class="grid lg:grid-cols-4 gap-8">
-                <!-- Sidebar Esquerda - Filtros -->
-                <aside class="lg:col-span-1">
-                    <!-- Filtros -->
-                    <div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-6 border border-purple-500/30 sticky top-4">
-                        <h2 class="text-xl font-cinzel font-bold mb-6">Filtros</h2>
-                        
-                        <div class="space-y-4">
-                            <!-- Filtro por Nome -->
-                            <div>
-                                <label for="filtro-nome" class="block text-sm font-bold mb-2">Nome</label>
-                                <input type="text" id="filtro-nome" placeholder="Digite o nome"
-                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
-                            </div>
-
-                            <!-- Filtro por CPF -->
-                            <div>
-                                <label for="filtro-cpf" class="block text-sm font-bold mb-2">CPF</label>
-                                <input type="text" id="filtro-cpf" placeholder="000.000.000-00"
-                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
-                            </div>
-
-                            <!-- Filtro por Tipo de Tiragem -->
-                            <div>
-                                <label for="filtro-tiragem" class="block text-sm font-bold mb-2">Tipo de Tiragem</label>
-                                <select id="filtro-tiragem" 
-                                        class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
-                                    <option value="">Todas</option>
-                                    <option value="pergunta-avulsa">Pergunta Avulsa</option>
-                                    <option value="templo-afrodite">Templo de Afrodite</option>
-                                    <option value="carta-canalizada">Carta Canalizada</option>
-                                    <option value="previsao-anual">Previsão Anual</option>
-                                    <option value="previsao-mensal">Previsão Mensal</option>
-                                    <option value="tem-traicao">Tem Traição?</option>
-                                </select>
-                            </div>
-
-                            <!-- Filtro por Data -->
-                            <div>
-                                <label for="filtro-data" class="block text-sm font-bold mb-2">Data</label>
-                                <input type="date" id="filtro-data"
-                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
-                            </div>
-
-                            <!-- Filtro por Mês/Ano -->
-                            <div>
-                                <label for="filtro-mes" class="block text-sm font-bold mb-2">Faturamento do Mês</label>
-                                <input type="month" id="filtro-mes"
-                                       class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col gap-3 mt-6">
-                            <button onclick="aplicarFiltros()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-lg transition text-sm">
-                                🔍 Pesquisar
-                            </button>
-                            <button onclick="limparFiltros()" class="bg-purple-900/50 hover:bg-purple-900/70 text-white font-bold px-4 py-2 rounded-lg transition border border-purple-500 text-sm">
-                                ✖️ Limpar
-                            </button>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- Conteúdo Principal -->
-                <main class="lg:col-span-3">
-                    <!-- Estatísticas -->
-                    <div class="grid md:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-gradient-to-br from-purple-800/40 to-purple-900/40 rounded-xl p-6 border border-purple-500/30">
-                            <div class="text-purple-300 text-sm mb-1">Total de Tiragens</div>
-                            <div class="text-3xl font-bold" id="stat-total">0</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-green-800/40 to-green-900/40 rounded-xl p-6 border border-green-500/30">
-                            <div class="text-green-300 text-sm mb-1">Concluídas</div>
-                            <div class="text-3xl font-bold text-green-400" id="stat-concluidas">0</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-yellow-800/40 to-yellow-900/40 rounded-xl p-6 border border-yellow-500/30">
-                            <div class="text-yellow-300 text-sm mb-1">Pendentes</div>
-                            <div class="text-3xl font-bold text-yellow-400" id="stat-pendentes">0</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-blue-800/40 to-blue-900/40 rounded-xl p-6 border border-blue-500/30">
-                            <div class="text-blue-300 text-sm mb-1">Faturamento Mensal</div>
-                            <div class="text-3xl font-bold text-blue-400" id="stat-faturamento">R$ 0</div>
-                        </div>
-                    </div>
-
-                    <!-- Tabela de Resultados -->
-                    <div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-purple-500/30">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-cinzel font-bold">Tiragens Registradas</h2>
-                            <span class="text-purple-300" id="total-registros">0 registros</span>
-                        </div>
-
-                        <!-- Tabela -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="border-b border-purple-500/30">
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Data</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Nome</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">CPF</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Cidade</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Rua</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Número</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">CEP</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Tipo</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Valor</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Status</th>
-                                        <th class="text-left py-3 px-4 font-bold text-purple-300">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabela-tiragens">
-                                    <!-- Dados serão inseridos aqui via JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Paginação -->
-                        <div class="flex justify-between items-center mt-6">
-                            <div class="text-purple-300 text-sm">
-                                Mostrando <span id="page-start">0</span> a <span id="page-end">0</span> de <span id="page-total">0</span> registros
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="paginaAnterior()" class="bg-purple-900/50 hover:bg-purple-900/70 px-4 py-2 rounded-lg border border-purple-500 transition">
-                                    ← Anterior
-                                </button>
-                                <button onclick="proximaPagina()" class="bg-purple-900/50 hover:bg-purple-900/70 px-4 py-2 rounded-lg border border-purple-500 transition">
-                                    Próxima →
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-            </div>
+            <a href="index.html" class="text-purple-300 hover:text-purple-400 transition-colors">
+                ← Voltar ao Site
+            </a>
         </div>
-    </main>
+    </nav>
+</header>
 
-    <!-- Modal de Detalhes -->
-    <div id="modal-detalhes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-3xl p-8 max-w-3xl w-full border-2 border-purple-500 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-start mb-6">
-                <h2 class="text-3xl font-cinzel font-bold">Detalhes da Tiragem</h2>
-                <button onclick="fecharModal()" class="text-purple-300 hover:text-white text-2xl">×</button>
+<main class="container mx-auto px-4 py-12">
+<div class="max-w-7xl mx-auto">
+
+<div class="mb-8">
+    <h1 class="text-4xl font-cinzel font-bold mb-2">Histórico de Tiragens</h1>
+    <p class="text-purple-300">Gerencie e consulte todas as tiragens realizadas</p>
+</div>
+
+<!-- CONTROLE DE AGENDA -->
+<div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-6 border border-purple-500/30 mb-8">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+
+        <div class="flex-1">
+            <h2 class="text-2xl font-cinzel font-bold mb-2">Controle de Agenda</h2>
+            <p class="text-purple-300 text-sm" id="agenda-data"></p>
+
+            <div class="mt-3 text-lg">
+                Atendimentos hoje:
+                <span id="agenda-contador" class="font-bold text-purple-300 ml-2">0 / 14</span>
             </div>
-            
-            <div id="modal-conteudo" class="space-y-4 text-purple-200">
-                <!-- Conteúdo será inserido aqui -->
+
+            <div class="w-full bg-purple-900/50 rounded-full h-3 mt-3 overflow-hidden">
+                <div id="agenda-barra" class="h-3 bg-purple-500 transition-all duration-300" style="width:0%"></div>
             </div>
+
+            <div class="mt-4">
+                <span id="agenda-status-badge"
+                      class="px-4 py-2 rounded-full text-sm font-bold border bg-green-900/40 text-green-400 border-green-500">
+                    🟢 Agenda Aberta
+                </span>
+            </div>
+
+            <p class="text-xs text-purple-400 mt-3">
+                • Limite diário: 14 atendimentos  
+                • Finais de semana: fechamento automático  
+                • Controle manual disponível
+            </p>
         </div>
+
+        <div class="flex flex-col gap-3">
+            <button id="btn-toggle-agenda"
+                onclick="toggleAgendaManual()"
+                class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-lg transition">
+                Fechar Agenda
+            </button>
+
+            <button onclick="exportarCSV()"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-lg transition">
+                📄 Exportar Relatório
+            </button>
+        </div>
+
     </div>
+</div>
 
-    <script src="admin.js"></script>
+<div class="grid lg:grid-cols-4 gap-8">
+
+<!-- SIDEBAR -->
+<aside class="lg:col-span-1">
+<div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-6 border border-purple-500/30 sticky top-4">
+<h2 class="text-xl font-cinzel font-bold mb-6">Filtros</h2>
+
+<div class="space-y-4">
+<input type="text" id="filtro-nome" placeholder="Nome"
+class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
+
+<input type="text" id="filtro-cpf" placeholder="CPF"
+class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
+
+<select id="filtro-tiragem"
+class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
+<option value="">Todas</option>
+<option value="pergunta-avulsa">Pergunta Avulsa</option>
+<option value="templo-afrodite">Templo de Afrodite</option>
+<option value="carta-canalizada">Carta Canalizada</option>
+<option value="previsao-anual">Previsão Anual</option>
+<option value="previsao-mensal">Previsão Mensal</option>
+<option value="tem-traicao">Tem Traição?</option>
+</select>
+
+<input type="date" id="filtro-data"
+class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
+
+<input type="month" id="filtro-mes"
+class="w-full bg-purple-900/50 border-2 border-purple-500 rounded-lg px-4 py-2 text-sm focus:border-purple-400 focus:outline-none">
+</div>
+
+<div class="flex flex-col gap-3 mt-6">
+<button onclick="aplicarFiltros()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-lg transition text-sm">
+🔍 Pesquisar
+</button>
+<button onclick="limparFiltros()" class="bg-purple-900/50 hover:bg-purple-900/70 text-white font-bold px-4 py-2 rounded-lg transition border border-purple-500 text-sm">
+✖️ Limpar
+</button>
+</div>
+
+</div>
+</aside>
+
+<!-- CONTEÚDO -->
+<div class="lg:col-span-3">
+
+<div class="grid md:grid-cols-4 gap-4 mb-8">
+<div class="bg-gradient-to-br from-purple-800/40 to-purple-900/40 rounded-xl p-6 border border-purple-500/30">
+<div class="text-purple-300 text-sm mb-1">Total de Tiragens</div>
+<div class="text-3xl font-bold" id="stat-total">0</div>
+</div>
+<div class="bg-gradient-to-br from-green-800/40 to-green-900/40 rounded-xl p-6 border border-green-500/30">
+<div class="text-green-300 text-sm mb-1">Concluídas</div>
+<div class="text-3xl font-bold text-green-400" id="stat-concluidas">0</div>
+</div>
+<div class="bg-gradient-to-br from-yellow-800/40 to-yellow-900/40 rounded-xl p-6 border border-yellow-500/30">
+<div class="text-yellow-300 text-sm mb-1">Pendentes</div>
+<div class="text-3xl font-bold text-yellow-400" id="stat-pendentes">0</div>
+</div>
+<div class="bg-gradient-to-br from-blue-800/40 to-blue-900/40 rounded-xl p-6 border border-blue-500/30">
+<div class="text-blue-300 text-sm mb-1">Faturamento Mensal</div>
+<div class="text-3xl font-bold text-blue-400" id="stat-faturamento">R$ 0</div>
+</div>
+</div>
+
+<div class="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-purple-500/30">
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="border-b border-purple-500/30">
+<th class="text-left py-3 px-4 font-bold text-purple-300">Data</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Nome</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">CPF</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Cidade</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Rua</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Número</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">CEP</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Tipo</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Valor</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Status</th>
+<th class="text-left py-3 px-4 font-bold text-purple-300">Ações</th>
+</tr>
+</thead>
+<tbody id="tabela-tiragens"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</main>
+
+<script src="admin.js"></script>
 </body>
 </html>
