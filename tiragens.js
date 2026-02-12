@@ -4,10 +4,8 @@
 let tipoTiragemSelecionado = null;
 let precoUnitarioBase = 0;
 let quantidadeVariavel = 1;
-let tabelaPrecos = {
-    'pergunta-avulsa': [70, 132, 189, 240, 275],  // 1 a 5 perguntas
-    'templo-afrodite': [165, 298, 445]  // 1 a 3 templos
-};
+let tabelaPrecos = null; // tabela antiga removida
+
 let nomesTiragens = {
     'pergunta-avulsa': 'Pergunta Avulsa',
     'templo-afrodite': 'Templo de Afrodite',
@@ -85,11 +83,11 @@ function selectTiragem(tipo, preco, elemento) {
         if (tipo === 'pergunta-avulsa') {
             quantidadeLabel.textContent = 'Quantas perguntas você deseja?';
             quantidadeInput.max = 5;
-            quantidadeInfo.innerHTML = '1 pergunta: R$ 70 | 2: R$ 132 | 3: R$ 189 | 4: R$ 240 | 5: R$ 275';
+            quantidadeInfo.innerHTML = 'Valor por pergunta: R$ 45';
         } else {
             quantidadeLabel.textContent = 'Quantos templos você deseja?';
             quantidadeInput.max = 3;
-            quantidadeInfo.innerHTML = '1 templo: R$ 165 | 2: R$ 298 | 3: R$ 445';
+            quantidadeInfo.innerHTML = 'Valor por templo: R$ 99';
         }
     } else {
         quantidadeSelector.style.display = 'none';
@@ -161,34 +159,31 @@ function decreaseQuantity() {
 // ========================================
 // CÁLCULO DE PREÇO
 // ========================================
+
 function calculateTotal() {
-    // Verifica se uma tiragem foi selecionada
     if (!tipoTiragemSelecionado || !precoUnitarioBase) {
         return;
     }
 
-    // Calcula preço base
     let precoBase = precoUnitarioBase;
-    
-    // Se for pergunta-avulsa ou templo-afrodite, usa tabela de preços
-    if (tipoTiragemSelecionado === 'pergunta-avulsa' || tipoTiragemSelecionado === 'templo-afrodite') {
-        const tabela = tabelaPrecos[tipoTiragemSelecionado];
-        precoBase = tabela[quantidadeVariavel - 1];
+
+    // Para Pergunta Avulsa e Templo de Afrodite agora é multiplicação simples
+    if (tipoTiragemSelecionado === 'pergunta-avulsa' || 
+        tipoTiragemSelecionado === 'templo-afrodite') {
+        precoBase = precoUnitarioBase * quantidadeVariavel;
     }
-    
+
     const emergencial = document.getElementById('emergencial').checked;
 
-    // Aplica emergencial (dobra o valor)
     let precoFinal = precoBase;
+
     if (emergencial) {
         precoFinal = precoBase * 2;
     }
 
-    // Atualiza resumo
     document.getElementById('resumo-unitario').textContent = formatarMoeda(precoBase);
     document.getElementById('total-preco').textContent = formatarMoeda(precoFinal);
 
-    // Mostra/esconde linha emergencial
     const emergencialRow = document.getElementById('emergencial-row');
     if (emergencial) {
         emergencialRow.style.display = 'flex';
@@ -197,6 +192,7 @@ function calculateTotal() {
         emergencialRow.style.display = 'none';
     }
 }
+
 
 // ========================================
 // FORMATAÇÃO DE MOEDA
