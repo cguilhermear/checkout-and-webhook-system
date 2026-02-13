@@ -1,133 +1,185 @@
 // ========================================
-// DADOS MOCK
+// CONFIG E ESTADO
 // ========================================
-let tiragensData = [
-    {
-        id: 1,
-        data: '2025-11-20',
-        nome: 'Maria Silva',
-        cpf: '123.456.789-00',
-        email: 'maria@email.com',
-        telefone: '(11) 98765-4321',
-        dataNascimento: '1990-05-15',
-        cidade: 'São Paulo',
-        rua: 'Rua das Flores',
-        numero: '123',
-        cep: '12345-678',
-        tipo: 'pergunta-avulsa',
-        tipoNome: 'Pergunta Avulsa',
-        quantidade: 2,
-        valor: 132,
-        emergencial: false,
-        status: 'pendente'
-    },
-    {
-        id: 2,
-        data: '2025-11-21',
-        nome: 'João Santos',
-        cpf: '987.654.321-00',
-        email: 'joao@email.com',
-        telefone: '(11) 91234-5678',
-        dataNascimento: '1985-08-20',
-        cidade: 'São Paulo',
-        rua: 'Av. Paulista',
-        numero: '1000',
-        cep: '01310-100',
-        tipo: 'templo-afrodite',
-        tipoNome: 'Templo de Afrodite',
-        quantidade: 1,
-        valor: 165,
-        emergencial: false,
-        status: 'concluida'
-    }
-];
-
-let tiragensFiltradas = [...tiragensData];
+const API_URL = "http://localhost:3000";
+let tiragensData = [];
+let tiragensFiltradas = [];
 let paginaAtual = 1;
 const itensPorPagina = 10;
-
-let agendaManualFechada = false;
 const LIMITE_DIARIO = 14;
 
 // ========================================
-// INICIALIZAÇÃO
+// INICIALIZAÇÃO E AUTH
 // ========================================
 document.addEventListener('DOMContentLoaded', function () {
+    checkAuth();
+
+    // Setup login form
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+
+    // Initial Filters
     const hoje = new Date();
     const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
     document.getElementById('filtro-mes').value = mesAtual;
-
-    carregarTiragens();
-    atualizarEstatisticas();
-    atualizarAgenda();
 });
+
+function checkAuth() {
+    const token = localStorage.getItem('admin_token');
+    if (!token) {
+        showLogin();
+    } else {
+        loadDashboard();
+    }
+}
+
+function showLogin() {
+    document.getElementById('login-modal').classList.remove('hidden');
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const password = document.getElementById('admin-password').value;
+    const errorMsg = document.getElementById('login-error');
+
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('admin_token', data.token);
+            document.getElementById('login-modal').classList.add('hidden');
+            loadDashboard();
+        } else {
+            errorMsg.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Erro de conexão com o servidor');
+    }
+}
+
+function getAuthHeader() {
+    return {
+        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+        'Content-Type': 'application/json'
+    };
+}
+
+// ========================================
+// CARREGAMENTO DE DADOS
+// ========================================
+async function loadDashboard() {
+    await Promise.all([
+        carregarTiragens(),
+        atualizarAgenda()
+    ]);
+}
+
+async function carregarTiragens() {
+    try {
+        const res = await fetch(`${API_URL}/tiragens`, {
+            headers: getAuthHeader()
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('admin_token');
+            return showLogin();
+        }
+
+        const data = await res.json();
+
+        // Map backend data format if necessary, or just use it
+        tiragensData = data.map(t => ({
+            ...t,
+            tipoNome: formatarTipo(t.tipo) // Helper to format type name
+        }));
+
+        aplicarFiltros(); // Updates filtered list and UI
+    } catch (err) {
+        console.error("Erro ao carregar tiragens:", err);
+    }
+}
 
 // ========================================
 // AGENDA
 // ========================================
-function atualizarAgenda() {
-    const hoje = new Date();
-    const hojeStr = hoje.toISOString().split('T')[0];
+async function atualizarAgenda() {
+    try {
+        const res = await fetch(`${API_URL}/agenda/status`, {
+            headers: getAuthHeader()
+        });
+        const data = await res.json();
 
-    const atendimentosHoje = tiragensData.filter(t => t.data === hojeStr).length;
-
-    const diaSemana = hoje.getDay(); // 0 domingo, 6 sábado
-    const fimDeSemana = (diaSemana === 0 || diaSemana === 6);
-
-    let status = 'aberta';
-
-    if (agendaManualFechada) status = 'fechada';
-    else if (fimDeSemana) status = 'fechada';
-    else if (atendimentosHoje >= LIMITE_DIARIO) status = 'fechada';
-
-    atualizarUIAgenda(atendimentosHoje, status);
+        atualizarUIAgenda(data.atendimentos, data.status, data.max);
+    } catch (err) {
+        console.error("Erro ao carregar agenda:", err);
+    }
 }
 
-function atualizarUIAgenda(total, status) {
+function atualizarUIAgenda(total, status, max) {
     const contador = document.getElementById('agenda-contador');
     const badge = document.getElementById('agenda-status-badge');
     const barra = document.getElementById('agenda-barra');
     const btn = document.getElementById('btn-toggle-agenda');
 
-    contador.textContent = `${total} / ${LIMITE_DIARIO}`;
+    contador.textContent = `${total} / ${max}`;
 
-    const porcentagem = Math.min((total / LIMITE_DIARIO) * 100, 100);
+    const porcentagem = Math.min((total / max) * 100, 100);
     barra.style.width = porcentagem + '%';
 
     if (status === 'aberta') {
         badge.className = "px-4 py-2 rounded-full text-sm font-bold border bg-green-900/40 text-green-400 border-green-500";
         badge.textContent = "🟢 Agenda Aberta";
         btn.textContent = "Fechar Agenda";
+        btn.onclick = () => toggleAgenda(false); // Pass current intent
     } else {
         badge.className = "px-4 py-2 rounded-full text-sm font-bold border bg-red-900/40 text-red-400 border-red-500";
         badge.textContent = "🔴 Agenda Fechada";
         btn.textContent = "Abrir Agenda";
+        btn.onclick = () => toggleAgenda(true);
     }
 }
 
-function toggleAgendaManual() {
-    agendaManualFechada = !agendaManualFechada;
-    atualizarAgenda();
+async function toggleAgenda() {
+    try {
+        const res = await fetch(`${API_URL}/agenda/toggle`, {
+            method: 'POST',
+            headers: getAuthHeader()
+        });
+
+        if (res.ok) {
+            atualizarAgenda();
+        } else {
+            alert("Erro ao alterar agenda");
+        }
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 // ========================================
 // FILTROS
 // ========================================
 function aplicarFiltros() {
-    const nome = document.getElementById('filtro-nome').value.toLowerCase();
-    const cpf = document.getElementById('filtro-cpf').value;
-    const tipo = document.getElementById('filtro-tiragem').value;
-    const data = document.getElementById('filtro-data').value;
+    const filtroNome = document.getElementById('filtro-nome').value.toLowerCase();
+    const filtroCpf = document.getElementById('filtro-cpf').value;
+    const filtroTiragem = document.getElementById('filtro-tiragem').value;
+    const filtroData = document.getElementById('filtro-data').value;
 
     tiragensFiltradas = tiragensData.filter(t => {
         return (!nome || t.nome.toLowerCase().includes(nome)) &&
-               (!cpf || t.cpf.includes(cpf)) &&
-               (!tipo || t.tipo === tipo) &&
-               (!data || t.data === data);
+            (!cpf || t.cpf.includes(cpf)) &&
+            (!tipo || t.tipo === tipo) &&
+            (!data || t.data === data);
     });
 
     paginaAtual = 1;
-    carregarTiragens();
+    renderizarTabela();
+    atualizarEstatisticas();
 }
 
 function limparFiltros() {
@@ -137,20 +189,28 @@ function limparFiltros() {
     document.getElementById('filtro-data').value = '';
 
     tiragensFiltradas = [...tiragensData];
-    carregarTiragens();
+    renderizarTabela();
+    atualizarEstatisticas();
 }
 
 // ========================================
-// TABELA
+// CARREGAMENTO DE DADOS
 // ========================================
-function carregarTiragens() {
+function renderizarTabela() {
     const tabela = document.getElementById('tabela-tiragens');
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    const tiragensExibidas = tiragensFiltradas.slice(inicio, fim);
+
+    // Limpa tabela
     tabela.innerHTML = '';
 
     tiragensFiltradas.forEach(t => {
-        const statusClass = t.status === 'concluida'
+        const statusClass = t.status === 'pago' || t.status === 'concluida'
             ? 'bg-green-900/30 text-green-400 border-green-500/50'
             : 'bg-yellow-900/30 text-yellow-400 border-yellow-500/50';
+
+        const statusLabel = t.status === 'pago' ? 'Pago' : (t.status === 'concluida' ? 'Concluída' : 'Aguardando Pagamento');
 
         tabela.innerHTML += `
         <tr class="border-b border-purple-500/20 hover:bg-purple-900/20 transition">
@@ -165,7 +225,7 @@ function carregarTiragens() {
             <td class="py-3 px-4 font-bold">R$ ${t.valor}</td>
             <td class="py-3 px-4">
                 <span class="px-3 py-1 rounded-full text-xs font-bold border ${statusClass}">
-                    ${t.status === 'concluida' ? '✓ Concluída' : '⏳ Pendente'}
+                    ${statusLabel}
                 </span>
             </td>
             <td class="py-3 px-4">
@@ -173,8 +233,6 @@ function carregarTiragens() {
             </td>
         </tr>`;
     });
-
-    atualizarEstatisticas();
 }
 
 // ========================================
@@ -183,49 +241,67 @@ function carregarTiragens() {
 function atualizarEstatisticas() {
     document.getElementById('stat-total').textContent = tiragensData.length;
     document.getElementById('stat-concluidas').textContent =
-        tiragensData.filter(t => t.status === 'concluida').length;
+        tiragensData.filter(t => t.status === 'pago' || t.status === 'concluida').length;
     document.getElementById('stat-pendentes').textContent =
-        tiragensData.filter(t => t.status === 'pendente').length;
+        tiragensData.filter(t => t.status === 'aguardando_pagamento').length;
 
-    const faturamento = tiragensData.reduce((s, t) => s + t.valor, 0);
+    const faturamento = tiragensData
+        .filter(t => t.status === 'pago' || t.status === 'concluida')
+        .reduce((s, t) => s + t.valor, 0);
+
     document.getElementById('stat-faturamento').textContent = formatarMoeda(faturamento);
 }
 
 // ========================================
-// MODAL
+// MODAL DETALHES
 // ========================================
 function verDetalhes(id) {
     const tiragem = tiragensData.find(t => t.id === id);
     if (!tiragem) return;
 
-    alert(`Cliente: ${tiragem.nome}\nCPF: ${tiragem.cpf}\nValor: R$ ${tiragem.valor}`);
+    alert(`Cliente: ${tiragem.nome}\nCPF: ${tiragem.cpf}\nValor: R$ ${tiragem.valor}\nID MP: ${tiragem.mp_payment_id || 'N/A'}`);
 }
 
 // ========================================
-// EXPORTAR CSV
+// PAGINAÇÃO
 // ========================================
-function exportarCSV() {
-    let csv = "Data,Nome,CPF,Cidade,Rua,Número,CEP,Tipo,Valor,Status\n";
+function proximaPagina() {
+    const totalPaginas = Math.ceil(tiragensFiltradas.length / itensPorPagina);
+    if (paginaAtual < totalPaginas) {
+        paginaAtual++;
+        carregarTiragens();
+    }
+}
 
-    tiragensData.forEach(t => {
-        csv += `${t.data},${t.nome},${t.cpf},${t.cidade},${t.rua},${t.numero},${t.cep},${t.tipoNome},${t.valor},${t.status}\n`;
-    });
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = "relatorio_tiragens.csv";
-    link.click();
+function paginaAnterior() {
+    if (paginaAtual > 1) {
+        paginaAtual--;
+        carregarTiragens();
+    }
 }
 
 // ========================================
 // UTILITÁRIOS
 // ========================================
 function formatarData(data) {
-    const [ano, mes, dia] = data.split('-');
-    return `${dia}/${mes}/${ano}`;
+    if (!data) return '-';
+    // Se data vier como ISO (Check se tem T)
+    if (data.includes('T')) return data.split('T')[0].split('-').reverse().join('/');
+    return data.split('-').reverse().join('/');
 }
 
 function formatarMoeda(valor) {
     return 'R$ ' + valor.toFixed(2).replace('.', ',');
+}
+
+function formatarTipo(slug) {
+    const mapa = {
+        'pergunta-avulsa': 'Pergunta Avulsa',
+        'templo-afrodite': 'Templo de Afrodite',
+        'carta-canalizada': 'Carta Canalizada',
+        'previsao-anual': 'Previsão Anual',
+        'previsao-mensal': 'Previsão Mensal',
+        'tem-traicao': 'Tem Traição?'
+    };
+    return mapa[slug] || slug;
 }

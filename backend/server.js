@@ -1,25 +1,60 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
-const mercadopago = require("mercadopago");
+const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
+
+// 🔴 COLOQUE SEU ACCESS TOKEN AQUI
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 
 const app = express();
 const PORT = 3000;
 
 /* ======================================================
-   CONFIG MERCADO PAGO
-====================================================== */
-
-mercadopago.configure({
-    access_token: "SEU_ACCESS_TOKEN_AQUI"
-});
-
-/* ======================================================
-   MIDDLEWARE
+   MIDDLEWARES
 ====================================================== */
 
 app.use(cors());
 app.use(express.json());
+
+// Load Environment Variables
+require("dotenv").config();
+const { v4: uuidv4 } = require('uuid');
+
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+
+// In-memory token store (simplest solution for now)
+const validTokens = new Set();
+
+/* ======================================================
+   AUTH MIDDLEWARE
+====================================================== */
+
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    if (!token) return res.sendStatus(401);
+    if (!validTokens.has(token)) return res.sendStatus(403);
+
+    next();
+};
+
+/* ======================================================
+   LOGIN ENDPOINT
+====================================================== */
+
+app.post("/login", (req, res) => {
+    const { password } = req.body;
+
+    if (password === ADMIN_PASSWORD) {
+        const token = uuidv4();
+        validTokens.add(token);
+        return res.json({ token });
+    }
+
+    res.status(401).json({ error: "Senha incorreta" });
+});
 
 /* ======================================================
    BANCO DE DADOS
@@ -46,7 +81,8 @@ db.serialize(() => {
             quantidade INTEGER,
             valor REAL,
             emergencial INTEGER,
-            status TEXT
+            status TEXT,
+            mp_payment_id TEXT
         )
     `);
 
@@ -75,7 +111,7 @@ function isFinalDeSemana() {
 }
 
 /* ======================================================
-   AGENDA STATUS
+   STATUS AGENDA (PROTECTED)
 ====================================================== */
 
 app.get("/agenda/status", (req, res) => {
@@ -115,10 +151,10 @@ app.get("/agenda/status", (req, res) => {
 });
 
 /* ======================================================
-   TOGGLE AGENDA MANUAL
+   TOGGLE AGENDA (PROTECTED)
 ====================================================== */
 
-app.post("/agenda/toggle", (req, res) => {
+app.post("/agenda/toggle", authMiddleware, (req, res) => {
 
     const dataHoje = hoje();
 
@@ -147,10 +183,10 @@ app.post("/agenda/toggle", (req, res) => {
 });
 
 /* ======================================================
-   LISTAR TIRAGENS
+   LISTAR TIRAGENS (PROTECTED)
 ====================================================== */
 
-app.get("/tiragens", (req, res) => {
+app.get("/tiragens", authMiddleware, (req, res) => {
 
     db.all("SELECT * FROM tiragens ORDER BY id DESC", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -160,41 +196,47 @@ app.get("/tiragens", (req, res) => {
 });
 
 /* ======================================================
-   CRIAR TIRAGEM (VALIDAÇÃO AGENDA)
+   CRIAR TIRAGEM + GERAR CHECKOUT MP
 ====================================================== */
 
-app.post("/tiragens", (req, res) => {
+app.post("/tiragens", async (req, res) => {
 
     const dataHoje = hoje();
 
-    db.get("SELECT * FROM agenda_config WHERE data = ?", [dataHoje], (err, agenda) => {
+    const {
+        nome,
+        cpf,
+        email,
+        telefone,
+        data_nascimento,
+        cidade,
+        rua,
+        numero,
+        cep,
+        tipo,
+        quantidade,
+        valor,
+        emergencial
+    } = req.body;
 
-        if (err) return res.status(500).json({ error: err.message });
+    db.get("SELECT COUNT(*) as total FROM tiragens WHERE data = ? AND status = 'pago'",
+        [dataHoje],
+        async (err, row) => {
 
-        db.get(
-            "SELECT COUNT(*) as total FROM tiragens WHERE data = ? AND status = 'pago'",
-            [dataHoje],
-            (err2, row) => {
+            if (err) return res.status(500).json({ error: err.message });
 
-                if (err2) return res.status(500).json({ error: err2.message });
+            if (row.total >= 14 || isFinalDeSemana()) {
+                return res.status(400).json({ error: "Agenda fechada" });
+            }
 
-                const totalHoje = row.total;
-                const max = agenda ? agenda.max_atendimentos : 14;
-                const manual = agenda ? agenda.fechada_manual : 0;
-
-                if (isFinalDeSemana()) {
-                    return res.status(400).json({ error: "Agenda fechada (final de semana)" });
-                }
-
-                if (manual === 1) {
-                    return res.status(400).json({ error: "Agenda fechada manualmente" });
-                }
-
-                if (totalHoje >= max) {
-                    return res.status(400).json({ error: "Limite diário atingido" });
-                }
-
-                const {
+            db.run(
+                `
+                INSERT INTO tiragens
+                (data, nome, cpf, email, telefone, data_nascimento, cidade, rua, numero, cep, tipo, quantidade, valor, emergencial, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `,
+                [
+                    dataHoje,
                     nome,
                     cpf,
                     email,
@@ -207,91 +249,51 @@ app.post("/tiragens", (req, res) => {
                     tipo,
                     quantidade,
                     valor,
-                    emergencial
-                } = req.body;
+                    emergencial ? 1 : 0,
+                    "aguardando_pagamento"
+                ],
+                async function (err2) {
 
-                db.run(
-                    `
-                    INSERT INTO tiragens
-                    (data, nome, cpf, email, telefone, data_nascimento, cidade, rua, numero, cep, tipo, quantidade, valor, emergencial, status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    `,
-                    [
-                        dataHoje,
-                        nome,
-                        cpf,
-                        email,
-                        telefone,
-                        data_nascimento,
-                        cidade,
-                        rua,
-                        numero,
-                        cep,
-                        tipo,
-                        quantidade,
-                        valor,
-                        emergencial ? 1 : 0,
-                        "aguardando_pagamento"
-                    ],
-                    function (err3) {
-                        if (err3) return res.status(500).json({ error: err3.message });
+                    if (err2) return res.status(500).json({ error: err2.message });
+
+                    const tiragemId = this.lastID;
+
+
+
+                    try {
+                        const preference = new Preference(client);
+                        const result = await preference.create({
+                            body: {
+                                items: [
+                                    {
+                                        title: `Tiragem - ${tipo}`,
+                                        quantity: 1,
+                                        unit_price: Number(valor)
+                                    }
+                                ],
+                                external_reference: String(tiragemId),
+                                notification_url: "https://SEU-DOMINIO.com/webhook",
+                                back_urls: {
+                                    success: "https://SEU-DOMINIO.com/sucesso",
+                                    failure: "https://SEU-DOMINIO.com/falha",
+                                    pending: "https://SEU-DOMINIO.com/pendente"
+                                },
+                                auto_return: "approved"
+                            }
+                        });
 
                         res.json({
                             sucesso: true,
-                            id: this.lastID
+                            init_point: result.init_point
                         });
+                    } catch (mpError) {
+                        console.error(mpError);
+                        res.status(500).json({ error: "Erro ao criar preferência no Mercado Pago" });
                     }
-                );
+                }
+            );
 
-            });
-    });
-
-});
-
-/* ======================================================
-   CRIAR PAGAMENTO MERCADO PAGO
-====================================================== */
-
-app.post("/pagamento", async (req, res) => {
-
-    const { id } = req.body;
-
-    db.get("SELECT * FROM tiragens WHERE id = ?", [id], async (err, tiragem) => {
-
-        if (err || !tiragem) {
-            return res.status(404).json({ error: "Tiragem não encontrada" });
-        }
-
-        try {
-
-            const preference = {
-                items: [
-                    {
-                        title: `Tiragem ${tiragem.tipo}`,
-                        unit_price: Number(tiragem.valor),
-                        quantity: 1
-                    }
-                ],
-                external_reference: String(tiragem.id),
-                notification_url: "https://SEU_DOMINIO/webhook",
-                back_urls: {
-                    success: "https://SEU_DOMINIO/sucesso.html",
-                    failure: "https://SEU_DOMINIO/erro.html"
-                },
-                auto_return: "approved"
-            };
-
-            const response = await mercadopago.preferences.create(preference);
-
-            res.json({
-                init_point: response.body.init_point
-            });
-
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-
-    });
+        });
 
 });
 
@@ -301,51 +303,27 @@ app.post("/pagamento", async (req, res) => {
 
 app.post("/webhook", async (req, res) => {
 
-    try {
+    if (req.query.type === "payment") {
 
-        const paymentId = req.query["data.id"];
+        const payment = new Payment(client);
+        try {
+            const paymentData = await payment.get({ id: req.query["data.id"] });
 
-        if (!paymentId) return res.sendStatus(200);
+            if (paymentData.status === "approved") {
 
-        const payment = await mercadopago.payment.findById(paymentId);
+                const tiragemId = paymentData.external_reference;
 
-        if (payment.body.status === "approved") {
-
-            const referencia = payment.body.external_reference;
-
-            db.run(
-                "UPDATE tiragens SET status = 'pago' WHERE id = ?",
-                [referencia]
-            );
-
+                db.run(
+                    "UPDATE tiragens SET status = 'pago', mp_payment_id = ? WHERE id = ?",
+                    [paymentData.id, tiragemId]
+                );
+            }
+        } catch (error) {
+            console.error(error);
         }
-
-        res.sendStatus(200);
-
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500);
     }
 
-});
-
-/* ======================================================
-   ALTERAR STATUS MANUAL
-====================================================== */
-
-app.patch("/tiragens/:id", (req, res) => {
-
-    const { status } = req.body;
-
-    db.run(
-        "UPDATE tiragens SET status = ? WHERE id = ?",
-        [status, req.params.id],
-        function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ sucesso: true });
-        }
-    );
-
+    res.sendStatus(200);
 });
 
 /* ======================================================
