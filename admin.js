@@ -7,17 +7,15 @@ let tiragensFiltradas = [];
 let paginaAtual = 1;
 const itensPorPagina = 10;
 const LIMITE_DIARIO = 14;
+let refreshInterval = null;
 
 // ========================================
 // INICIALIZAÇÃO E AUTH
 // ========================================
 document.addEventListener('DOMContentLoaded', function () {
     checkAuth();
-
-    // Setup login form
     document.getElementById('login-form').addEventListener('submit', handleLogin);
 
-    // Initial Filters
     const hoje = new Date();
     const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
     document.getElementById('filtro-mes').value = mesAtual;
@@ -25,11 +23,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function checkAuth() {
     const token = localStorage.getItem('admin_token');
-    if (!token) {
-        showLogin();
-    } else {
+    if (!token) showLogin();
+    else {
         loadDashboard();
+        iniciarAutoRefresh();
     }
+}
+
+function iniciarAutoRefresh() {
+    if (refreshInterval) clearInterval(refreshInterval);
+    refreshInterval = setInterval(() => {
+        atualizarAgenda();
+        carregarTiragens();
+    }, 30000);
 }
 
 function showLogin() {
@@ -53,11 +59,11 @@ async function handleLogin(e) {
             localStorage.setItem('admin_token', data.token);
             document.getElementById('login-modal').classList.add('hidden');
             loadDashboard();
+            iniciarAutoRefresh();
         } else {
             errorMsg.classList.remove('hidden');
         }
     } catch (err) {
-        console.error(err);
         alert('Erro de conexão com o servidor');
     }
 }
@@ -70,7 +76,7 @@ function getAuthHeader() {
 }
 
 // ========================================
-// CARREGAMENTO DE DADOS
+// DASHBOARD
 // ========================================
 async function loadDashboard() {
     await Promise.all([
@@ -79,6 +85,9 @@ async function loadDashboard() {
     ]);
 }
 
+// ========================================
+// TIRAGENS
+// ========================================
 async function carregarTiragens() {
     try {
         const res = await fetch(`${API_URL}/tiragens`, {
@@ -92,13 +101,12 @@ async function carregarTiragens() {
 
         const data = await res.json();
 
-        // Map backend data format if necessary, or just use it
         tiragensData = data.map(t => ({
             ...t,
-            tipoNome: formatarTipo(t.tipo) // Helper to format type name
+            tipoNome: formatarTipo(t.tipo)
         }));
 
-        aplicarFiltros(); // Updates filtered list and UI
+        aplicarFiltros();
     } catch (err) {
         console.error("Erro ao carregar tiragens:", err);
     }
@@ -112,8 +120,8 @@ async function atualizarAgenda() {
         const res = await fetch(`${API_URL}/agenda/status`, {
             headers: getAuthHeader()
         });
-        const data = await res.json();
 
+        const data = await res.json();
         atualizarUIAgenda(data.atendimentos, data.status, data.max);
     } catch (err) {
         console.error("Erro ao carregar agenda:", err);
@@ -127,7 +135,6 @@ function atualizarUIAgenda(total, status, max) {
     const btn = document.getElementById('btn-toggle-agenda');
 
     contador.textContent = `${total} / ${max}`;
-
     const porcentagem = Math.min((total / max) * 100, 100);
     barra.style.width = porcentagem + '%';
 
@@ -135,13 +142,13 @@ function atualizarUIAgenda(total, status, max) {
         badge.className = "px-4 py-2 rounded-full text-sm font-bold border bg-green-900/40 text-green-400 border-green-500";
         badge.textContent = "🟢 Agenda Aberta";
         btn.textContent = "Fechar Agenda";
-        btn.onclick = () => toggleAgenda(false); // Pass current intent
     } else {
         badge.className = "px-4 py-2 rounded-full text-sm font-bold border bg-red-900/40 text-red-400 border-red-500";
         badge.textContent = "🔴 Agenda Fechada";
         btn.textContent = "Abrir Agenda";
-        btn.onclick = () => toggleAgenda(true);
     }
+
+    btn.onclick = toggleAgenda;
 }
 
 async function toggleAgenda() {
@@ -151,11 +158,8 @@ async function toggleAgenda() {
             headers: getAuthHeader()
         });
 
-        if (res.ok) {
-            atualizarAgenda();
-        } else {
-            alert("Erro ao alterar agenda");
-        }
+        if (res.ok) atualizarAgenda();
+        else alert("Erro ao alterar agenda");
     } catch (err) {
         console.error(err);
     }
@@ -165,10 +169,10 @@ async function toggleAgenda() {
 // FILTROS
 // ========================================
 function aplicarFiltros() {
-    const filtroNome = document.getElementById('filtro-nome').value.toLowerCase();
-    const filtroCpf = document.getElementById('filtro-cpf').value;
-    const filtroTiragem = document.getElementById('filtro-tiragem').value;
-    const filtroData = document.getElementById('filtro-data').value;
+    const nome = document.getElementById('filtro-nome').value.toLowerCase();
+    const cpf = document.getElementById('filtro-cpf').value;
+    const tipo = document.getElementById('filtro-tiragem').value;
+    const data = document.getElementById('filtro-data').value;
 
     tiragensFiltradas = tiragensData.filter(t => {
         return (!nome || t.nome.toLowerCase().includes(nome)) &&
@@ -189,28 +193,52 @@ function limparFiltros() {
     document.getElementById('filtro-data').value = '';
 
     tiragensFiltradas = [...tiragensData];
+    paginaAtual = 1;
     renderizarTabela();
     atualizarEstatisticas();
 }
 
 // ========================================
-// CARREGAMENTO DE DADOS
+// EXPORTAR CSV 1 CLIQUE
+// ========================================
+function exportarCSV() {
+    if (tiragensFiltradas.length === 0) {
+        alert("Nenhum registro para exportar.");
+        return;
+    }
+
+    let csv = "Data;Nome;CPF;Cidade;Rua;Numero;CEP;Tipo;Valor;Status\n";
+
+    tiragensFiltradas.forEach(t => {
+        csv += `${formatarData(t.data)};${t.nome};${t.cpf};${t.cidade || ''};${t.rua || ''};${t.numero || ''};${t.cep || ''};${t.tipoNome};${t.valor};${t.status}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "relatorio_nf.csv";
+    link.click();
+}
+
+// ========================================
+// TABELA
 // ========================================
 function renderizarTabela() {
     const tabela = document.getElementById('tabela-tiragens');
+    tabela.innerHTML = '';
+
     const inicio = (paginaAtual - 1) * itensPorPagina;
     const fim = inicio + itensPorPagina;
     const tiragensExibidas = tiragensFiltradas.slice(inicio, fim);
 
-    // Limpa tabela
-    tabela.innerHTML = '';
-
-    tiragensFiltradas.forEach(t => {
-        const statusClass = t.status === 'pago' || t.status === 'concluida'
+    tiragensExibidas.forEach(t => {
+        const statusClass = (t.status === 'pago' || t.status === 'concluida')
             ? 'bg-green-900/30 text-green-400 border-green-500/50'
             : 'bg-yellow-900/30 text-yellow-400 border-yellow-500/50';
 
-        const statusLabel = t.status === 'pago' ? 'Pago' : (t.status === 'concluida' ? 'Concluída' : 'Aguardando Pagamento');
+        const statusLabel = t.status === 'pago'
+            ? 'Pago'
+            : (t.status === 'concluida' ? 'Concluída' : 'Aguardando Pagamento');
 
         tabela.innerHTML += `
         <tr class="border-b border-purple-500/20 hover:bg-purple-900/20 transition">
@@ -233,6 +261,8 @@ function renderizarTabela() {
             </td>
         </tr>`;
     });
+
+    atualizarPaginacao();
 }
 
 // ========================================
@@ -247,37 +277,51 @@ function atualizarEstatisticas() {
 
     const faturamento = tiragensData
         .filter(t => t.status === 'pago' || t.status === 'concluida')
-        .reduce((s, t) => s + t.valor, 0);
+        .reduce((s, t) => s + Number(t.valor), 0);
 
     document.getElementById('stat-faturamento').textContent = formatarMoeda(faturamento);
 }
 
 // ========================================
-// MODAL DETALHES
-// ========================================
-function verDetalhes(id) {
-    const tiragem = tiragensData.find(t => t.id === id);
-    if (!tiragem) return;
-
-    alert(`Cliente: ${tiragem.nome}\nCPF: ${tiragem.cpf}\nValor: R$ ${tiragem.valor}\nID MP: ${tiragem.mp_payment_id || 'N/A'}`);
-}
-
-// ========================================
 // PAGINAÇÃO
 // ========================================
+function atualizarPaginacao() {
+    const total = tiragensFiltradas.length;
+    const inicio = total === 0 ? 0 : (paginaAtual - 1) * itensPorPagina + 1;
+    const fim = Math.min(paginaAtual * itensPorPagina, total);
+
+    document.getElementById('page-start').textContent = inicio;
+    document.getElementById('page-end').textContent = fim;
+    document.getElementById('page-total').textContent = total;
+    document.getElementById('total-registros').textContent = `${total} registros`;
+}
+
 function proximaPagina() {
     const totalPaginas = Math.ceil(tiragensFiltradas.length / itensPorPagina);
     if (paginaAtual < totalPaginas) {
         paginaAtual++;
-        carregarTiragens();
+        renderizarTabela();
     }
 }
 
 function paginaAnterior() {
     if (paginaAtual > 1) {
         paginaAtual--;
-        carregarTiragens();
+        renderizarTabela();
     }
+}
+
+// ========================================
+// DETALHES
+// ========================================
+function verDetalhes(id) {
+    const tiragem = tiragensData.find(t => t.id === id);
+    if (!tiragem) return;
+
+    alert(`Cliente: ${tiragem.nome}
+CPF: ${tiragem.cpf}
+Valor: R$ ${tiragem.valor}
+ID MP: ${tiragem.mp_payment_id || 'N/A'}`);
 }
 
 // ========================================
@@ -285,13 +329,12 @@ function paginaAnterior() {
 // ========================================
 function formatarData(data) {
     if (!data) return '-';
-    // Se data vier como ISO (Check se tem T)
     if (data.includes('T')) return data.split('T')[0].split('-').reverse().join('/');
     return data.split('-').reverse().join('/');
 }
 
 function formatarMoeda(valor) {
-    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+    return 'R$ ' + Number(valor).toFixed(2).replace('.', ',');
 }
 
 function formatarTipo(slug) {
