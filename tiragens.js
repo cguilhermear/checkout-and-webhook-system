@@ -5,8 +5,8 @@ let tipoTiragemSelecionado = null;
 let precoUnitarioBase = 0;
 let quantidadeVariavel = 1;
 let tabelaPrecos = {
-    'pergunta-avulsa': [70, 132, 189, 240, 275],  // 1 a 5 perguntas
-    'templo-afrodite': [165, 298, 445]  // 1 a 3 templos
+    'pergunta-avulsa': [45, 86, 125, 163, 199],  // 1 a 5 perguntas
+    'templo-afrodite': [99, 180, 250]  // 1 a 3 templos
 };
 let nomesTiragens = {
     'pergunta-avulsa': 'Pergunta Avulsa',
@@ -83,13 +83,13 @@ function selectTiragem(tipo, preco, elemento) {
         quantidadeInput.value = 1;
 
         if (tipo === 'pergunta-avulsa') {
-            quantidadeLabel.textContent = 'Quantas perguntas você deseja?';
-            quantidadeInput.max = 5;
-            quantidadeInfo.innerHTML = '1 pergunta: R$ 70 | 2: R$ 132 | 3: R$ 189 | 4: R$ 240 | 5: R$ 275';
+        quantidadeLabel.textContent = 'Quantas perguntas você deseja?';
+        quantidadeInput.max = 5;
+        quantidadeInfo.innerHTML = '1 pergunta: R$ 45 | 2: R$ 86 | 3: R$ 125 | 4: R$ 163 | 5: R$ 199';
         } else {
             quantidadeLabel.textContent = 'Quantos templos você deseja?';
             quantidadeInput.max = 3;
-            quantidadeInfo.innerHTML = '1 templo: R$ 165 | 2: R$ 298 | 3: R$ 445';
+            quantidadeInfo.innerHTML = '1 templo: R$ 99 | 2: R$ 180 | 3: R$ 250';
         }
     } else {
         quantidadeSelector.style.display = 'none';
@@ -162,33 +162,32 @@ function decreaseQuantity() {
 // CÁLCULO DE PREÇO
 // ========================================
 function calculateTotal() {
-    // Verifica se uma tiragem foi selecionada
     if (!tipoTiragemSelecionado || !precoUnitarioBase) {
         return;
     }
 
-    // Calcula preço base
     let precoBase = precoUnitarioBase;
 
-    // Para Pergunta Avulsa e Templo de Afrodite agora é multiplicação simples
-    if (tipoTiragemSelecionado === 'pergunta-avulsa' ||
-        tipoTiragemSelecionado === 'templo-afrodite') {
-        precoBase = precoUnitarioBase * quantidadeVariavel;
+    // Usa tabela progressiva se existir
+    if (tabelaPrecos[tipoTiragemSelecionado]) {
+        const tabela = tabelaPrecos[tipoTiragemSelecionado];
+        const index = quantidadeVariavel - 1;
+
+        if (tabela[index] !== undefined) {
+            precoBase = tabela[index];
+        }
     }
 
     const emergencial = document.getElementById('emergencial').checked;
 
-    // Aplica emergencial (dobra o valor)
     let precoFinal = precoBase;
     if (emergencial) {
         precoFinal = precoBase * 2;
     }
 
-    // Atualiza resumo
     document.getElementById('resumo-unitario').textContent = formatarMoeda(precoBase);
     document.getElementById('total-preco').textContent = formatarMoeda(precoFinal);
 
-    // Mostra/esconde linha emergencial
     const emergencialRow = document.getElementById('emergencial-row');
     if (emergencial) {
         emergencialRow.style.display = 'flex';
@@ -197,6 +196,7 @@ function calculateTotal() {
         emergencialRow.style.display = 'none';
     }
 }
+
 
 // ========================================
 // FORMATAÇÃO DE MOEDA
@@ -220,9 +220,8 @@ function validarEEnviarFormulario() {
     const nome = document.getElementById('nome').value.trim();
     const email = document.getElementById('email').value.trim();
     const telefone = document.getElementById('telefone').value.trim();
-    const pergunta = document.getElementById('pergunta').value.trim();
 
-    if (!nome || !email || !telefone || !pergunta) {
+    if (!nome || !email || !telefone) {
         alert('⚠️ Por favor, preencha todos os campos obrigatórios!');
         return;
     }
@@ -242,34 +241,22 @@ function validarEEnviarFormulario() {
     }
 
     // Tudo validado - mostrar modal de aviso legal
-    showModal();
+    confirmAndSubmit();
 }
 
 // ========================================
 // MODAL DE AVISO LEGAL
 // ========================================
-function showModal() {
-    document.getElementById('modal-aviso').classList.remove('hidden');
-    document.getElementById('modal-aviso').classList.add('flex');
-    document.body.style.overflow = 'hidden';
-}
 
-function closeModal() {
-    document.getElementById('modal-aviso').classList.add('hidden');
-    document.getElementById('modal-aviso').classList.remove('flex');
-    document.body.style.overflow = 'auto';
-}
 
 const API_URL = "http://localhost:3000";
 
 async function confirmAndSubmit() {
-    closeModal();
     mostrarProcessamento();
-
     // Coletar dados do formulário
     const dados = {
         tipo: tipoTiragemSelecionado,
-        quantidade: document.getElementById('quantidade').value,
+        quantidade: quantidadeVariavel,
         emergencial: document.getElementById('emergencial').checked,
         valor: calcularValorTotal(), // Helper to get raw value
         nome: document.getElementById('nome').value,
@@ -312,9 +299,13 @@ async function confirmAndSubmit() {
 function calcularValorTotal() {
     let precoBase = precoUnitarioBase;
 
-    if (tipoTiragemSelecionado === 'pergunta-avulsa' ||
-        tipoTiragemSelecionado === 'templo-afrodite') {
-        precoBase = precoUnitarioBase * quantidadeVariavel;
+    if (tabelaPrecos[tipoTiragemSelecionado]) {
+        const tabela = tabelaPrecos[tipoTiragemSelecionado];
+        const index = quantidadeVariavel - 1;
+
+        if (tabela[index] !== undefined) {
+            precoBase = tabela[index];
+        }
     }
 
     if (document.getElementById('emergencial').checked) {
