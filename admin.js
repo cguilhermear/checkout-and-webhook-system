@@ -240,6 +240,14 @@ function renderizarTabela() {
             ? 'Pago'
             : (t.status === 'concluida' ? 'Concluída' : 'Aguardando Pagamento');
 
+        const statusTiragemClass = t.status_tiragem === 'concluida'
+            ? 'bg-blue-900/30 text-blue-400 border-blue-500/50'
+            : 'bg-purple-900/30 text-purple-300 border-purple-500/50';
+
+        const statusTiragemLabel = t.status_tiragem === 'concluida'
+            ? 'Tiragem Concluída'
+            : 'Tiragem Pendente';
+
         tabela.innerHTML += `
         <tr class="border-b border-purple-500/20 hover:bg-purple-900/20 transition">
             <td class="py-3 px-4">${formatarData(t.data)}</td>
@@ -251,14 +259,30 @@ function renderizarTabela() {
             <td class="py-3 px-4">${t.cep || ''}</td>
             <td class="py-3 px-4">${t.tipoNome}</td>
             <td class="py-3 px-4 font-bold">R$ ${t.valor}</td>
-            <td class="py-3 px-4">
-                <span class="px-3 py-1 rounded-full text-xs font-bold border ${statusClass}">
-                    ${statusLabel}
-                </span>
+            <td class="py-3 px-4 flex flex-col gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-bold border ${statusClass}">
+                ${statusLabel}
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold border ${statusTiragemClass}">
+                ${statusTiragemLabel}
+            </span>
             </td>
-            <td class="py-3 px-4">
-                <button onclick="verDetalhes(${t.id})" class="text-purple-400 hover:text-purple-300 font-bold">👁️ Ver</button>
-            </td>
+            <td class="py-3 px-4 flex flex-col gap-2">
+            ${t.status_tiragem === 'concluida'
+                ? `<button onclick="toggleStatusTiragem(${t.id}, 'concluida')" 
+                    class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1 rounded-full font-bold transition">
+                    ✔ Concluída
+                </button>`
+                : `<button onclick="toggleStatusTiragem(${t.id}, 'pendente')" 
+                    class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1 rounded-full font-bold transition">
+                    Marcar como Concluída
+                </button>`
+            }
+            <button onclick="verDetalhes(${t.id})" class="text-purple-400 hover:text-purple-300 font-bold text-xs">
+                👁️ Ver
+            </button>
+</td>
+
         </tr>`;
     });
 
@@ -348,3 +372,79 @@ function formatarTipo(slug) {
     };
     return mapa[slug] || slug;
 }
+
+// ========================================
+// TOGGLE STATUS TIRAGEM 
+// ========================================
+async function toggleStatusTiragem(id, statusAtual) {
+
+    const novoStatus = statusAtual === 'pendente' ? 'concluida' : 'pendente';
+
+    try {
+        const res = await fetch(`${API_URL}/tiragens/${id}/status`, {
+            method: 'PUT',
+            headers: getAuthHeader(),
+            body: JSON.stringify({ status_tiragem: novoStatus })
+        });
+
+        if (res.ok) {
+            await carregarTiragens();
+        } else {
+            alert("Erro ao atualizar status da tiragem");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// ========================================
+// FILTRO COLAPSÁVEL 
+// ========================================
+
+function toggleFiltros() {
+    const conteudo = document.getElementById('filtros-conteudo');
+    const icone = document.getElementById('icone-filtros');
+
+    conteudo.classList.toggle('hidden');
+
+    if (conteudo.classList.contains('hidden')) {
+        icone.textContent = '▼';
+    } else {
+        icone.textContent = '▲';
+    }
+}
+
+let sidebarAberta = false;
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar-filtros');
+    const layout = document.getElementById('layout-admin');
+    const conteudo = document.getElementById('conteudo-principal');
+    const filtrosConteudo = document.getElementById('filtros-conteudo');
+    const icone = document.getElementById('icone-filtros');
+
+    if (sidebarAberta) {
+        // FECHA tudo
+        sidebar.classList.add('hidden');
+        layout.classList.remove('lg:grid-cols-4');
+        layout.classList.add('lg:grid-cols-1');
+        conteudo.classList.remove('lg:col-span-3');
+        conteudo.classList.add('lg:col-span-1');
+    } else {
+        // ABRE tudo já expandido
+        sidebar.classList.remove('hidden');
+        layout.classList.remove('lg:grid-cols-1');
+        layout.classList.add('lg:grid-cols-4');
+        conteudo.classList.remove('lg:col-span-1');
+        conteudo.classList.add('lg:col-span-3');
+
+        // GARANTE filtros abertos
+        filtrosConteudo.classList.remove('hidden');
+        icone.textContent = '▲';
+    }
+
+    sidebarAberta = !sidebarAberta;
+}
+
+
+

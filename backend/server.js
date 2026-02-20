@@ -29,11 +29,12 @@ const authMiddleware = (req, res, next) => {
 const db = new sqlite3.Database("./database.sqlite");
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS tiragens (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data TEXT, nome TEXT, cpf TEXT, email TEXT, telefone TEXT, 
-        data_nascimento TEXT, cidade TEXT, rua TEXT, numero TEXT, 
-        cep TEXT, tipo TEXT, quantidade INTEGER, valor REAL, 
-        emergencial INTEGER, status TEXT, mp_payment_id TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    data TEXT, nome TEXT, cpf TEXT, email TEXT, telefone TEXT, 
+    data_nascimento TEXT, cidade TEXT, rua TEXT, numero TEXT, 
+    cep TEXT, tipo TEXT, quantidade INTEGER, valor REAL, 
+    emergencial INTEGER, status TEXT, mp_payment_id TEXT,
+    status_tiragem TEXT DEFAULT 'pendente'
     )`);
     db.run(`CREATE TABLE IF NOT EXISTS agenda_config (
         data TEXT PRIMARY KEY, max_atendimentos INTEGER, fechada_manual INTEGER
@@ -143,6 +144,29 @@ app.post("/tiragens", async (req, res) => {
                 console.error("ERRO DETALHADO MP:", JSON.stringify(mpError, null, 2));
                 res.status(500).json({ error: "Erro na API do Mercado Pago" });
             }
+        }
+    );
+});
+
+app.put("/tiragens/:id/status", authMiddleware, (req, res) => {
+    const { id } = req.params;
+    const { status_tiragem } = req.body;
+
+    if (!["pendente", "concluida"].includes(status_tiragem)) {
+        return res.status(400).json({ error: "Status inválido" });
+    }
+
+    db.run(
+        "UPDATE tiragens SET status_tiragem = ? WHERE id = ?",
+        [status_tiragem, id],
+        function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+
+            res.json({
+                sucesso: true,
+                id,
+                novo_status: status_tiragem
+            });
         }
     );
 });
