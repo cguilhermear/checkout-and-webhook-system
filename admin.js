@@ -1,7 +1,7 @@
 // ========================================
 // CONFIG E ESTADO
 // ========================================
-const API_URL = "http://localhost:3000";
+const API_URL = "/api";
 let tiragensData = [];
 let tiragensFiltradas = [];
 let paginaAtual = 1;

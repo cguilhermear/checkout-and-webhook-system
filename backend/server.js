@@ -134,8 +134,8 @@ app.post("/tiragens", async (req, res) => {
                         }],
                         external_reference: String(tiragemId),
                         back_urls: {
-                            success: "http://localhost:5173/sucesso",
-                            failure: "http://localhost:5173/falha"
+                            success: "http://melissacartomante.com.br/sucesso",
+                            failure: "http://melissacartomante.com.br/falha"
                         },
                     }
                 });

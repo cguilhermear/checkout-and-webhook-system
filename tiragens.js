@@ -249,7 +249,7 @@ function validarEEnviarFormulario() {
 // ========================================
 
 
-const API_URL = "http://localhost:3000";
+const API_URL = "/api";
 
 async function confirmAndSubmit() {
     mostrarProcessamento();
@@ -312,7 +312,7 @@ function calcularValorTotal() {
         precoBase = precoBase * 2;
     }
 
-    return precoBase;
+    return 1;
 }
 
 // ========================================
