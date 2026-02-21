@@ -55,6 +55,15 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
             background: linear-gradient(135deg, rgba(147, 51, 234, 0.3) 0%, rgba(192, 132, 252, 0.3) 100%);
         }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        .scroll-bounce {
+            animation: scrollBounce 1.6s infinite;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white" style="background: linear-gradient(135deg, #181349 0%, #0f0d2e 50%, #181349 100%);">
@@ -115,6 +124,17 @@
                     <p class="text-xl md:text-2xl text-purple-300 max-w-2xl mx-auto">
                         Escolha sua leitura e descubra o que as cartas revelam
                     </p>
+
+                    <!-- Indicador de Scroll (Mobile) -->
+                    <div class="mt-6 flex flex-col items-center md:hidden opacity-80">
+                        <span class="text-sm tracking-wide text-purple-200">
+                            Deslize para ver as opções
+                        </span>
+                        <span class="text-2xl text-purple-300 scroll-bounce" style="color: yellow;">
+                            ↓
+                        </span>
+</div>
+
                 </div>
 
                 <form id="tiragem-form" class="space-y-12">

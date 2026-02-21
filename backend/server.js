@@ -47,16 +47,44 @@ function isFinalDeSemana() { const dia = new Date().getDay(); return dia === 0 |
 
 async function calcularStatusAgenda() {
     const dataHoje = hoje();
+
     return new Promise((resolve) => {
         db.get("SELECT * FROM agenda_config WHERE data = ?", [dataHoje], (err, config) => {
-            db.get("SELECT COUNT(*) as total FROM tiragens WHERE data = ? AND status = 'pago'", [dataHoje], (err2, row) => {
-                const totalHoje = row?.total || 0;
-                const max = config?.max_atendimentos || LIMITE_DIARIO_PADRAO;
-                const manual = config?.fechada_manual || 0;
-                let status = "aberta";
-                if (isFinalDeSemana() || manual === 1 || totalHoje >= max) status = "fechada";
-                resolve({ data: dataHoje, atendimentos: totalHoje, max, status });
-            });
+
+            db.get(
+                "SELECT COUNT(*) as total FROM tiragens WHERE data = ? AND status = 'pago'",
+                [dataHoje],
+                (err2, row) => {
+
+                    const totalHoje = row?.total || 0;
+                    const max = config?.max_atendimentos || LIMITE_DIARIO_PADRAO;
+                    const manual = config?.fechada_manual;
+
+                    let status = "aberta";
+
+                    // 🔴 Se admin fechou manualmente
+                    if (manual === 1) {
+                        status = "fechada";
+                    }
+
+                    // 🟢 Se admin abriu manualmente (forçou abrir)
+                    else if (manual === 0) {
+                        status = "aberta";
+                    }
+
+                    // ⚙️ Caso padrão automático (sem intervenção manual)
+                    else if (totalHoje >= max) {
+                        status = "fechada";
+                    }
+
+                    resolve({
+                        data: dataHoje,
+                        atendimentos: totalHoje,
+                        max,
+                        status
+                    });
+                }
+            );
         });
     });
 }
@@ -83,13 +111,24 @@ app.get("/agenda/status-public", async (req, res) => {
 
 app.post("/agenda/toggle", authMiddleware, (req, res) => {
     const dataHoje = hoje();
+
     db.get("SELECT * FROM agenda_config WHERE data = ?", [dataHoje], (err, agenda) => {
-        if (agenda) {
-            const novoStatus = agenda.fechada_manual === 1 ? 0 : 1;
-            db.run("UPDATE agenda_config SET fechada_manual = ? WHERE data = ?", [novoStatus, dataHoje]);
+
+        if (!agenda) {
+            // Se não existe config ainda, cria forçando fechamento
+            db.run(
+                "INSERT INTO agenda_config (data, max_atendimentos, fechada_manual) VALUES (?, ?, ?)",
+                [dataHoje, LIMITE_DIARIO_PADRAO, 1]
+            );
         } else {
-            db.run("INSERT INTO agenda_config (data, max_atendimentos, fechada_manual) VALUES (?, ?, 1)", [dataHoje, LIMITE_DIARIO_PADRAO]);
+            const novoStatus = agenda.fechada_manual === 1 ? 0 : 1;
+
+            db.run(
+                "UPDATE agenda_config SET fechada_manual = ? WHERE data = ?",
+                [novoStatus, dataHoje]
+            );
         }
+
         res.json({ sucesso: true });
     });
 });
@@ -114,8 +153,18 @@ app.get("/tiragens/exportar-csv", authMiddleware, (req, res) => {
 });
 
 app.post("/tiragens", async (req, res) => {
+
+// 🔒 VERIFICA STATUS DA AGENDA ANTES DE CRIAR TIRAGEM
+const statusAgenda = await calcularStatusAgenda();
+
+if (statusAgenda.status === "fechada") {
+    return res.status(403).json({
+        error: "Agenda fechada para hoje. Limite de atendimentos atingido."
+    });
+}
+
     const { nome, cpf, email, telefone, data_nascimento, cidade, rua, numero, cep, tipo, valor, emergencial } = req.body;
-    
+
     db.run(
         `INSERT INTO tiragens (data, nome, cpf, email, telefone, data_nascimento, cidade, rua, numero, cep, tipo, quantidade, valor, emergencial, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [hoje(), nome, cpf, email, telefone, data_nascimento, cidade, rua, numero, cep, tipo, 1, valor, emergencial ? 1 : 0, "aguardando_pagamento"],

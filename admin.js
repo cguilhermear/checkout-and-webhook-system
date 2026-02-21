@@ -169,21 +169,50 @@ async function toggleAgenda() {
 // FILTROS
 // ========================================
 function aplicarFiltros() {
+
     const nome = document.getElementById('filtro-nome').value.toLowerCase();
     const cpf = document.getElementById('filtro-cpf').value;
     const tipo = document.getElementById('filtro-tiragem').value;
     const data = document.getElementById('filtro-data').value;
+    const statusFiltro = document.getElementById('filtro-status')?.value || "";
 
     tiragensFiltradas = tiragensData.filter(t => {
+
+        // 🔹 FILTRO DE STATUS EXPLÍCITO
+
+        if (statusFiltro === "concluida" && t.status_tiragem !== "concluida") {
+            return false;
+        }
+
+        if (statusFiltro === "todas") {
+            // não filtra por status
+        }
+
+        // 🔹 PADRÃO: se não escolheu status e não usou nenhum outro filtro
+        if (!statusFiltro && !nome && !cpf && !tipo && !data) {
+            if (t.status_tiragem === "concluida") return false;
+        }
+
+        // 🔹 DEMAIS FILTROS
         return (!nome || t.nome.toLowerCase().includes(nome)) &&
-            (!cpf || t.cpf.includes(cpf)) &&
-            (!tipo || t.tipo === tipo) &&
-            (!data || t.data === data);
+               (!cpf || t.cpf.includes(cpf)) &&
+               (!tipo || t.tipo === tipo) &&
+               (!data || t.data === data);
     });
 
     paginaAtual = 1;
     renderizarTabela();
     atualizarEstatisticas();
+
+    const titulo = document.querySelector("h2.text-2xl.font-cinzel.font-bold");
+
+    if (statusFiltro === "concluida") {
+        titulo.textContent = "Tiragens Concluídas";
+    } else if (!statusFiltro && !nome && !cpf && !tipo && !data) {
+        titulo.textContent = "Tiragens Pendentes";
+    } else {
+        titulo.textContent = "Tiragens Registradas";
+    }
 }
 
 function limparFiltros() {
@@ -293,16 +322,24 @@ function renderizarTabela() {
 // ESTATÍSTICAS
 // ========================================
 function atualizarEstatisticas() {
-    document.getElementById('stat-total').textContent = tiragensData.length;
-    document.getElementById('stat-concluidas').textContent =
-        tiragensData.filter(t => t.status === 'pago' || t.status === 'concluida').length;
-    document.getElementById('stat-pendentes').textContent =
-        tiragensData.filter(t => t.status === 'aguardando_pagamento').length;
+
+    const total = tiragensData.length;
+
+    const concluidas = tiragensData.filter(
+        t => t.status_tiragem === 'concluida'
+    ).length;
+
+    const pendentes = tiragensData.filter(
+        t => t.status_tiragem !== 'concluida'
+    ).length;
 
     const faturamento = tiragensData
-        .filter(t => t.status === 'pago' || t.status === 'concluida')
+        .filter(t => t.status === 'pago')
         .reduce((s, t) => s + Number(t.valor), 0);
 
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-concluidas').textContent = concluidas;
+    document.getElementById('stat-pendentes').textContent = pendentes;
     document.getElementById('stat-faturamento').textContent = formatarMoeda(faturamento);
 }
 

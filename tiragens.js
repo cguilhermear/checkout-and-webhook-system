@@ -216,28 +216,35 @@ function validarEEnviarFormulario() {
         return;
     }
 
-    // Validar campos obrigatórios
+    // Validar campos obrigatórios (apenas os com *)
     const nome = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
+    const dataNascimento = document.getElementById('data_nascimento').value;
+    const cpf = document.getElementById('cpf').value.trim();
+    const cidade = document.getElementById('cidade').value.trim();
 
-    if (!nome || !email || !telefone) {
-        alert('⚠️ Por favor, preencha todos os campos obrigatórios!');
+    if (!nome || !dataNascimento || !cpf || !cidade) {
+        alert('⚠️ Por favor, preencha todos os campos obrigatórios (*)!');
         return;
     }
 
     // Validar email
+    const email = document.getElementById('email').value.trim();
+    if (email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         alert('⚠️ Por favor, insira um e-mail válido!');
         return;
     }
+    }
 
     // Validar telefone (mínimo 10 dígitos)
+    const telefone = document.getElementById('telefone').value.trim();
+    if (telefone) {
     const telefoneNumeros = telefone.replace(/\D/g, '');
     if (telefoneNumeros.length < 10) {
         alert('⚠️ Por favor, insira um telefone válido!');
         return;
+    }
     }
 
     // Tudo validado - mostrar modal de aviso legal
