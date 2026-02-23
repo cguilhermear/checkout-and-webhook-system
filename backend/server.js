@@ -159,7 +159,7 @@ const statusAgenda = await calcularStatusAgenda();
 
 if (statusAgenda.status === "fechada") {
     return res.status(403).json({
-        error: "Agenda fechada para hoje. Limite de atendimentos atingido."
+        error: "As vagas de hoje já foram preenchidas 💜 Mas amanhã pela manhã você poderá garantir sua tiragem com prioridade."
     });
 }
 

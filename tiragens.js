@@ -290,10 +290,14 @@ async function confirmAndSubmit() {
             // Sucesso: Redirecionar para Mercado Pago
             window.location.href = result.init_point;
         } else {
-            // Erro
-            removerProcessamento();
-            alert(`⚠️ Erro: ${result.error || 'Não foi possível processar seu pedido.'}`);
-        }
+    removerProcessamento();
+
+    if (res.status === 403) {
+        alert(result.error);
+    } else {
+        alert('❌ Não foi possível processar seu pedido. Tente novamente.');
+    }
+}
 
     } catch (err) {
         console.error(err);
