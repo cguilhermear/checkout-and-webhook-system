@@ -159,7 +159,7 @@ const statusAgenda = await calcularStatusAgenda();
 
 if (statusAgenda.status === "fechada") {
     return res.status(403).json({
-        error: "As vagas de hoje já foram preenchidas 💜 Mas amanhã pela manhã você poderá garantir sua tiragem com prioridade."
+        error: "As vagas de hoje já foram preenchidas 💜 Mas amanhã abrirei novas vagas! Quanto mais cedo você solicitar sua tiragem, maiores serão suas chances de conseguir atendimento. ✨"
     });
 }
 
