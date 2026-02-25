@@ -183,9 +183,11 @@ if (statusAgenda.status === "fechada") {
                         }],
                         external_reference: String(tiragemId),
                         back_urls: {
-                            success: "http://melissacartomante.com.br/sucesso",
-                            failure: "http://melissacartomante.com.br/falha"
+                            success: "https://melissacartomante.com.br/sucesso",
+                            failure: "https://melissacartomante.com.br/falha",
+                            pending: "https://melissacartomante.com.br/pendente"
                         },
+                        auto_return: "approved"
                     }
                 });
                 res.json({ sucesso: true, init_point: response.init_point });
@@ -235,6 +237,22 @@ app.post("/webhook", async (req, res) => {
         console.error("Erro Webhook:", err);
         res.sendStatus(500);
     }
+});
+
+/* REDIRECT APÓS PAGAMENTO */
+app.get("/sucesso", (req, res) => {
+
+    const numero = "556192661502";
+
+    const mensagem = encodeURIComponent(
+        "Olá 💜 Acabei de realizar o pagamento da minha tiragem."
+    );
+
+    res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
+});
+
+app.get("/pendente", (req, res) => {
+    res.send("Pagamento pendente. Assim que for aprovado você poderá continuar.");
 });
 
 /* INICIALIZAÇÃO */
