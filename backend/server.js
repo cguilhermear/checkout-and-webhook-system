@@ -242,7 +242,7 @@ app.post("/webhook", async (req, res) => {
 /* REDIRECT APÓS PAGAMENTO */
 app.get("/sucesso", (req, res) => {
 
-    const numero = "556192661502";
+    const numero = "554988480529";
 
     const mensagem = encodeURIComponent(
         "Olá 💜 Acabei de realizar o pagamento da minha tiragem."
