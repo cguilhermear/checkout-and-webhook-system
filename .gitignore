@@ -25,3 +25,5 @@ Thumbs.db
 *.sln
 *.sw?
 
+# Banco de Dados
+backend/database.sqlite
