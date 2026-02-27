@@ -323,7 +323,7 @@ function calcularValorTotal() {
         precoBase = precoBase * 2;
     }
 
-    return 1;
+    return precoBase;
 }
 
 // ========================================
