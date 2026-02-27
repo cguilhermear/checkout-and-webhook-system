@@ -348,8 +348,6 @@ function removerProcessamento() {
     if (overlay) overlay.remove();
 }
 
-// Remover função antiga redirecionarParaWhatsApp
-
 
 // ========================================
 // FUNÇÕES AUXILIARES
