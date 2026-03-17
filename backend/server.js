@@ -157,6 +157,8 @@ console.log("🔥 TESTE LOG MP");
 
 app.post("/tiragens", async (req, res) => {
 
+    console.log("🔥 BODY RECEBIDO:", req.body);
+
 // 🔒 VERIFICA STATUS DA AGENDA ANTES DE CRIAR TIRAGEM
 const statusAgenda = await calcularStatusAgenda();
 
@@ -200,11 +202,12 @@ if (statusAgenda.status === "fechada") {
                  });
             } catch (mpError) {
                 console.error("ERRO MP COMPLETO:");
-                console.error(mpError);
-                console.error("STATUS:", mpError?.status);
-                console.error("MESSAGE:", mpError?.message);
-                console.error("CAUSE:", mpError?.cause);
-                console.error("RESPONSE:", mpError?.response?.data);
+    console.error(mpError);
+
+    return res.status(500).json({
+        error: "Erro na API do Mercado Pago",
+        detalhe: mpError?.message
+    });
             }
         }
     );
