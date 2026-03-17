@@ -183,7 +183,7 @@ if (statusAgenda.status === "fechada") {
                         items: [{
                             title: `Tiragem - ${tipo}`,
                             quantity: 1,
-                            unit_price: 0.01,
+                            unit_price: Number(valor),
                             currency_id: 'BRL'
                         }],
                         external_reference: String(tiragemId),
