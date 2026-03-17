@@ -189,11 +189,10 @@ if (statusAgenda.status === "fechada") {
                         external_reference: String(tiragemId),
                         notification_url: "https://melissacartomante.com.br/webhook",
                         back_urls: {
-                            success: "https://melissacartomante.com.br/sucesso",
-                            failure: "https://melissacartomante.com.br/falha",
-                            pending: "https://melissacartomante.com.br/pendente"
+                        success: `https://melissacartomante.com.br/sucesso?id=${tiragemId}`,
+                        failure: `https://melissacartomante.com.br/falha?id=${tiragemId}`,
+                        pending: `https://melissacartomante.com.br/pendente?id=${tiragemId}`
                         },
-                        auto_return: "approved"
                     }
                 });
                 res.json({ sucesso: true, 
@@ -338,10 +337,11 @@ app.get("/pendente", (req, res) => {
             <script>
 
                 const urlParams = new URLSearchParams(window.location.search);
-                const externalReference = localStorage.getItem("tiragem_id");
+                
+                let externalReference = urlParams.get("id");  
 
                 if(!externalReference){
-                    console.log("External reference não encontrada");
+                    externalReference = localStorage.getItem("tiragem_id");
                 }
 
                 setInterval(async () => {
