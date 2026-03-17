@@ -289,10 +289,14 @@ async function confirmAndSubmit() {
         console.log("RESPOSTA BACKEND:", result);   
         
         if (res.ok && result.sucesso) {
-            // Sucesso: Redirecionar para Mercado Pago
-            localStorage.setItem("tiragem_id", result.tiragem_id);
-            window.location.href = result.init_point;
-        } else {
+
+        localStorage.setItem("tiragem_id", result.tiragem_id);
+
+        window.open(result.init_point, "_blank");
+
+        window.location.href = `/pendente?id=${result.tiragem_id}`;
+
+            } else {
     removerProcessamento();
 
     if (res.status === 403) {
