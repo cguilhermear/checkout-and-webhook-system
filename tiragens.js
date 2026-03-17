@@ -258,6 +258,7 @@ function validarEEnviarFormulario() {
 
 const API_URL = "/api";
 
+
 async function confirmAndSubmit() {
     mostrarProcessamento();
     // Coletar dados do formulário
@@ -288,6 +289,7 @@ async function confirmAndSubmit() {
 
         if (res.ok && result.init_point) {
             // Sucesso: Redirecionar para Mercado Pago
+            localStorage.setItem("tiragem_id", result.tiragem_id);
             window.location.href = result.init_point;
         } else {
     removerProcessamento();

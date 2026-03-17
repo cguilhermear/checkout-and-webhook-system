@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+const paymentClient = new Payment(client);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 const LIMITE_DIARIO_PADRAO = 14;
 
@@ -152,6 +153,8 @@ app.get("/tiragens/exportar-csv", authMiddleware, (req, res) => {
     });
 });
 
+console.log("🔥 TESTE LOG MP");
+
 app.post("/tiragens", async (req, res) => {
 
 // 🔒 VERIFICA STATUS DA AGENDA ANTES DE CRIAR TIRAGEM
@@ -178,10 +181,11 @@ if (statusAgenda.status === "fechada") {
                         items: [{
                             title: `Tiragem - ${tipo}`,
                             quantity: 1,
-                            unit_price: Number(valor),
+                            unit_price: 0.01,
                             currency_id: 'BRL'
                         }],
                         external_reference: String(tiragemId),
+                        notification_url: "https://melissacartomante.com.br/webhook",
                         back_urls: {
                             success: "https://melissacartomante.com.br/sucesso",
                             failure: "https://melissacartomante.com.br/falha",
@@ -190,10 +194,17 @@ if (statusAgenda.status === "fechada") {
                         auto_return: "approved"
                     }
                 });
-                res.json({ sucesso: true, init_point: response.init_point });
+                res.json({ sucesso: true, 
+                    init_point: response.init_point,
+                     tiragem_id: tiragemId
+                 });
             } catch (mpError) {
-                console.error("ERRO DETALHADO MP:", JSON.stringify(mpError, null, 2));
-                res.status(500).json({ error: "Erro na API do Mercado Pago" });
+                console.error("ERRO MP COMPLETO:");
+                console.error(mpError);
+                console.error("STATUS:", mpError?.status);
+                console.error("MESSAGE:", mpError?.message);
+                console.error("CAUSE:", mpError?.cause);
+                console.error("RESPONSE:", mpError?.response?.data);
             }
         }
     );
@@ -222,20 +233,83 @@ app.put("/tiragens/:id/status", authMiddleware, (req, res) => {
     );
 });
 
-/* WEBHOOK PARA ATUALIZAÇÃO DE PAGAMENTO */
-app.post("/webhook", async (req, res) => {
-    try {
-        if (req.body.type === "payment") {
-            const payment = new Payment(client);
-            const paymentData = await payment.get({ id: req.body.data.id });
-            if (paymentData.status === "approved") {
-                db.run("UPDATE tiragens SET status = 'pago', mp_payment_id = ? WHERE id = ?", [paymentData.id, paymentData.external_reference]);
-            }
+app.get("/tiragens/:id/status-public", (req, res) => {
+    const { id } = req.params;
+
+    db.get(
+        "SELECT status FROM tiragens WHERE id = ?",
+        [id],
+        (err, row) => {
+            if (err) return res.status(500).json({ error: err.message });
+            if (!row) return res.status(404).json({ error: "Não encontrado" });
+
+            res.json({ status: row.status });
         }
+    );
+});
+
+/* WEBHOOK PARA ATUALIZAÇÃO DE PAGAMENTO */
+app.post('/webhook', async (req, res) => {
+
+    try {
+
+        if (req.body?.type && req.body.type !== "payment") {
+            console.log("Evento ignorado:", req.body.type);
+            return res.sendStatus(200);
+        }
+
+        const paymentId = req.body?.data?.id || req.body?.id;
+
+        if (!paymentId) {
+            console.log("Webhook recebido sem payment_id");
+            return res.sendStatus(200);
+        }
+
+        console.log("Payment ID recebido:", paymentId);
+
+        const payment = await paymentClient.get({ id: paymentId });
+
+        const status = payment.status;
+        const externalReference = payment.external_reference;
+
+        console.log("Status pagamento:", status);
+        console.log("External reference:", externalReference);
+
+        if (!externalReference || isNaN(Number(externalReference))) {
+            console.log("external_reference inválida");
+            return res.sendStatus(200);
+        }
+
+        if (status === "approved") {
+
+            db.run(
+                `UPDATE tiragens 
+                 SET status = 'pago', mp_payment_id = ?
+                 WHERE id = ? AND status != 'pago'`,
+                [paymentId, externalReference],
+                function (err) {
+
+                    if (err) {
+                        console.error("Erro ao atualizar banco:", err);
+                    } 
+                    else if (this.changes > 0) {
+                        console.log("Tiragem atualizada para PAGO:", externalReference);
+                    } 
+                    else {
+                        console.log("Pagamento já estava marcado como pago:", externalReference);
+                    }
+
+                }
+            );
+        }
+
         res.sendStatus(200);
+
     } catch (err) {
-        console.error("Erro Webhook:", err);
-        res.sendStatus(500);
+
+        console.error("Erro Webhook:", err.message);
+
+        res.sendStatus(200);
     }
 });
 
@@ -252,7 +326,38 @@ app.get("/sucesso", (req, res) => {
 });
 
 app.get("/pendente", (req, res) => {
-    res.send("Pagamento pendente. Assim que for aprovado você poderá continuar.");
+    res.send(`
+        <html>
+        <body style="font-family: Arial; text-align:center; padding-top:50px;">
+            <h2>💜 Aguardando confirmação do pagamento...</h2>
+            <p>Assim que o PIX for confirmado você será redirecionado automaticamente.</p>
+
+            <script>
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const externalReference = urlParams.get("external_reference");
+
+                if(!externalReference){
+                    console.log("External reference não encontrada");
+                }
+
+                setInterval(async () => {
+
+                    if(!externalReference) return;
+
+                    const response = await fetch("/tiragens/" + externalReference + "/status-public");
+                    const data = await response.json();
+
+                    if (data.status === "pago") {
+                        window.location.href = "/sucesso";
+                    }
+
+                }, 4000);
+
+            </script>
+        </body>
+        </html>
+    `);
 });
 
 /* INICIALIZAÇÃO */
