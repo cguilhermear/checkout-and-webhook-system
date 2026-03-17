@@ -338,7 +338,7 @@ app.get("/pendente", (req, res) => {
             <script>
 
                 const urlParams = new URLSearchParams(window.location.search);
-                const externalReference = urlParams.get("external_reference");
+                const externalReference = localStorage.getItem("tiragem_id");
 
                 if(!externalReference){
                     console.log("External reference não encontrada");

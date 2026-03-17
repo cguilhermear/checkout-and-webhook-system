@@ -286,8 +286,9 @@ async function confirmAndSubmit() {
         });
 
         const result = await res.json();
-
-        if (res.ok && result.init_point) {
+        console.log("RESPOSTA BACKEND:", result);   
+        
+        if (res.ok && result.sucesso) {
             // Sucesso: Redirecionar para Mercado Pago
             localStorage.setItem("tiragem_id", result.tiragem_id);
             window.location.href = result.init_point;
