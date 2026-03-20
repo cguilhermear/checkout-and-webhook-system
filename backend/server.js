@@ -316,7 +316,7 @@ app.post('/webhook', async (req, res) => {
 });
 
 /* REDIRECT APÓS PAGAMENTO */
-app.get("/sucesso", (req, res) => {
+app.get("/sucesso", async (req, res) => {
     const numero = "554988480529";
     const id = req.query.id;
 
@@ -324,30 +324,55 @@ app.get("/sucesso", (req, res) => {
         return res.redirect("/");
     }
 
-    db.get("SELECT * FROM tiragens WHERE id = ?", [id], (err, tiragem) => {
-        if (err || !tiragem) {
-            return res.redirect("/");
+    function esperar(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function buscarTiragemComRetry(id, tentativas = 5) {
+        for (let i = 0; i < tentativas; i++) {
+            const tiragem = await new Promise((resolve) => {
+                db.get("SELECT * FROM tiragens WHERE id = ?", [id], (err, row) => {
+                    resolve(row);
+                });
+            });
+
+            if (tiragem && tiragem.status === "pago") {
+                return tiragem;
+            }
+
+            await esperar(1500); // espera 1.5s antes de tentar de novo
         }
 
-        // Mapa de nomes amigáveis
-        const nomes = {
+        return null;
+    }
+
+    const tiragem = await buscarTiragemComRetry(id);
+
+    if (!tiragem) {
+        return res.send(`
+            <h2>⏳ Aguardando confirmação do pagamento...</h2>
+            <p>Atualize esta página em alguns segundos.</p>
+        `);
+    }
+
+    // Mapa de nomes amigáveis
+    const nomes = {
         'pergunta-avulsa': 'Pergunta Avulsa',
         'templo-afrodite': 'Templo de Afrodite',
         'tiragem-completa': 'Tiragem Completa',
         'area-da-vida': 'Área da Vida',
         'tem-traicao': 'Tem Traição?'
-        };
+    };
 
-        const mensagem = encodeURIComponent(
-        `Olá 💜 Acabei de realizar o pagamento da minha tiragem.
+    const mensagem = encodeURIComponent(
+`Olá 💜 Acabei de realizar o pagamento da minha tiragem.
 
-        Nome completo: ${tiragem.nome}
-        Data de nascimento: ${tiragem.data_nascimento}
-        Método e quantidade: ${nomes[tiragem.tipo] || tiragem.tipo} (${tiragem.quantidade})` 
-        );
+Nome completo: ${tiragem.nome}
+Data de nascimento: ${tiragem.data_nascimento}
+Método e quantidade: ${nomes[tiragem.tipo] || tiragem.tipo} (${tiragem.quantidade})`
+    );
 
-        res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
-    });
+    res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
 });
 
 app.get("/pendente", (req, res) => {
