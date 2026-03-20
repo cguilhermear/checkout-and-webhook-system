@@ -183,7 +183,7 @@ if (statusAgenda.status === "fechada") {
                         items: [{
                             title: `Tiragem - ${tipo}`,
                             quantity: 1,
-                            unit_price: 1.00, // Valor simbólico, o valor real é tratado no backend com a váriave de Number(valor)
+                            unit_price: 0.01, // Valor simbólico, o valor real é tratado no backend com a váriave de Number(valor)
                             currency_id: 'BRL'
                         }],
                         external_reference: String(tiragemId),
