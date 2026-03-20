@@ -292,8 +292,16 @@ async function confirmAndSubmit() {
 
         localStorage.setItem("tiragem_id", result.tiragem_id);
 
-        window.location.href = result.init_point;
+        // TENTA abrir nova aba (Android / Desktop)
+        const novaAba = window.open(result.init_point, "_blank");
 
+        // Se bloqueou (iOS), redireciona na mesma aba
+        if (!novaAba || novaAba.closed || typeof novaAba.closed === 'undefined') {
+            window.location.href = result.init_point;
+        } else {
+            // Mantém usuário no fluxo do site
+            window.location.href = `/pendente?id=${result.tiragem_id}`;
+        }
 
             } else {
     removerProcessamento();
