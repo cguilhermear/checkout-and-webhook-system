@@ -375,7 +375,7 @@ app.get("/pendente", (req, res) => {
                     const data = await response.json();
 
                     if (data.status === "pago") {
-                        window.location.href = "/sucesso";
+                        window.location.href = "/sucesso?id=" + externalReference;
                     }
 
                 }, 4000);
