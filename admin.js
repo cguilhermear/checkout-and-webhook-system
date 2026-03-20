@@ -402,9 +402,9 @@ function formatarTipo(slug) {
     const mapa = {
         'pergunta-avulsa': 'Pergunta Avulsa',
         'templo-afrodite': 'Templo de Afrodite',
-        'carta-canalizada': 'Carta Canalizada',
+        'tiragem-completa': 'Tiragem Completa',
         'previsao-anual': 'Previsão Anual',
-        'previsao-mensal': 'Previsão Mensal',
+        'area-da-vida': 'Área da Vida',
         'tem-traicao': 'Tem Traição?'
     };
     return mapa[slug] || slug;

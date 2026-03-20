@@ -5,15 +5,15 @@ let tipoTiragemSelecionado = null;
 let precoUnitarioBase = 0;
 let quantidadeVariavel = 1;
 let tabelaPrecos = {
-    'pergunta-avulsa': [45, 86, 125, 163, 199],  // 1 a 5 perguntas
-    'templo-afrodite': [99, 180, 250]  // 1 a 3 templos
+    'pergunta-avulsa': [57, 77, 107, 147, 167],  // 1 a 5 perguntas
+    'templo-afrodite': [67, 117, 137]  // 1 a 3 templos
 };
 let nomesTiragens = {
     'pergunta-avulsa': 'Pergunta Avulsa',
     'templo-afrodite': 'Templo de Afrodite',
-    'carta-canalizada': 'Carta Canalizada',
+    'tiragem-completa': 'Tiragem Completa',
     'previsao-anual': 'Previsão Anual',
-    'previsao-mensal': 'Previsão Mensal',
+    'area-da-vida': 'Área da Vida',
     'tem-traicao': 'Tem Traição?'
 };
 
@@ -85,11 +85,11 @@ function selectTiragem(tipo, preco, elemento) {
         if (tipo === 'pergunta-avulsa') {
         quantidadeLabel.textContent = 'Quantas perguntas você deseja?';
         quantidadeInput.max = 5;
-        quantidadeInfo.innerHTML = '1 pergunta: R$ 45 | 2: R$ 86 | 3: R$ 125 | 4: R$ 163 | 5: R$ 199';
+        quantidadeInfo.innerHTML = '<strong>1 pergunta:</strong> R$ 57 | <strong>2:</strong> R$ 77 | <strong>3:</strong> R$ 107 | <strong>4:</strong> R$ 147 | <strong>5:</strong> R$ 167';
         } else {
             quantidadeLabel.textContent = 'Quantos templos você deseja?';
             quantidadeInput.max = 3;
-            quantidadeInfo.innerHTML = '1 templo: R$ 99 | 2: R$ 180 | 3: R$ 250';
+            quantidadeInfo.innerHTML = '<strong>1 templo:</strong> R$ 67 | <strong>2:</strong> R$ 117 | <strong>3:</strong> R$ 137';
         }
     } else {
         quantidadeSelector.style.display = 'none';
@@ -292,9 +292,8 @@ async function confirmAndSubmit() {
 
         localStorage.setItem("tiragem_id", result.tiragem_id);
 
-        window.open(result.init_point, "_blank");
+        window.location.href = result.init_point;
 
-        window.location.href = `/pendente?id=${result.tiragem_id}`;
 
             } else {
     removerProcessamento();

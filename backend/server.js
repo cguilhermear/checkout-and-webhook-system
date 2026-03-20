@@ -183,7 +183,7 @@ if (statusAgenda.status === "fechada") {
                         items: [{
                             title: `Tiragem - ${tipo}`,
                             quantity: 1,
-                            unit_price: Number(valor),
+                            unit_price: 1.00, // Valor simbólico, o valor real é tratado no backend com a váriave de Number(valor)
                             currency_id: 'BRL'
                         }],
                         external_reference: String(tiragemId),
@@ -317,14 +317,37 @@ app.post('/webhook', async (req, res) => {
 
 /* REDIRECT APÓS PAGAMENTO */
 app.get("/sucesso", (req, res) => {
-
     const numero = "554988480529";
+    const id = req.query.id;
 
-    const mensagem = encodeURIComponent(
-        "Olá 💜 Acabei de realizar o pagamento da minha tiragem."
-    );
+    if (!id) {
+        return res.redirect("/");
+    }
 
-    res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
+    db.get("SELECT * FROM tiragens WHERE id = ?", [id], (err, tiragem) => {
+        if (err || !tiragem) {
+            return res.redirect("/");
+        }
+
+        // Mapa de nomes amigáveis
+        const nomes = {
+        'pergunta-avulsa': 'Pergunta Avulsa',
+        'templo-afrodite': 'Templo de Afrodite',
+        'tiragem-completa': 'Tiragem Completa',
+        'area-da-vida': 'Área da Vida',
+        'tem-traicao': 'Tem Traição?'
+        };
+
+        const mensagem = encodeURIComponent(
+        `Olá 💜 Acabei de realizar o pagamento da minha tiragem.
+
+        Nome completo: ${tiragem.nome}
+        Data de nascimento: ${tiragem.data_nascimento}
+        Método e quantidade: ${nomes[tiragem.tipo] || tiragem.tipo} (${tiragem.quantidade})` 
+        );
+
+        res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
+    });
 });
 
 app.get("/pendente", (req, res) => {
