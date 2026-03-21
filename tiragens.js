@@ -12,8 +12,8 @@ let nomesTiragens = {
     'pergunta-avulsa': 'Pergunta Avulsa',
     'templo-afrodite': 'Templo de Afrodite',
     'tiragem-completa': 'Tiragem Completa',
-    'previsao-anual': 'Previsão Anual',
     'area-da-vida': 'Área da Vida',
+    'previsao-mensal': 'Previsão Mensal',
     'tem-traicao': 'Tem Traição?'
 };
 
@@ -96,7 +96,7 @@ function selectTiragem(tipo, preco, elemento) {
     }
 
     // Atualiza resumo
-    document.getElementById('resumo-tipo').textContent = nomesTiragens[tipo];
+    document.getElementById('resumo-tipo').textContent = nomesTiragens[tipo] || tipo;
 
     // Recalcula total
     calculateTotal();

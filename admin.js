@@ -399,14 +399,17 @@ function formatarMoeda(valor) {
 }
 
 function formatarTipo(slug) {
+    if (slug === 'previsao-anual') return 'Previsão Anual (antigo)';
+
     const mapa = {
         'pergunta-avulsa': 'Pergunta Avulsa',
         'templo-afrodite': 'Templo de Afrodite',
         'tiragem-completa': 'Tiragem Completa',
-        'previsao-anual': 'Previsão Anual',
         'area-da-vida': 'Área da Vida',
+        'previsao-mensal': 'Previsão Mensal',
         'tem-traicao': 'Tem Traição?'
     };
+
     return mapa[slug] || slug;
 }
 

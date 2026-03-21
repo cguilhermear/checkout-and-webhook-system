@@ -183,7 +183,7 @@ if (statusAgenda.status === "fechada") {
                         items: [{
                             title: `Tiragem - ${tipo}`,
                             quantity: 1,
-                            unit_price: Number(valor), // Valor simbólico, o valor real é tratado no backend com a váriave de Number(valor)
+                            unit_price: 0.01, // Valor simbólico, o valor real é tratado no backend com a váriave de Number(valor)
                             currency_id: 'BRL'
                         }],
                         external_reference: String(tiragemId),
@@ -361,16 +361,17 @@ app.get("/sucesso", async (req, res) => {
         'templo-afrodite': 'Templo de Afrodite',
         'tiragem-completa': 'Tiragem Completa',
         'area-da-vida': 'Área da Vida',
+        'previsao-mensal': 'Previsão Mensal',
         'tem-traicao': 'Tem Traição?'
     };
 
     const mensagem = encodeURIComponent(
-`Olá 💜 Acabei de realizar o pagamento da minha tiragem.
+`Olá 💜Acabei de realizar o pagamento da minha tiragem.
 
-Nome completo: ${tiragem.nome}
-Data de nascimento: ${tiragem.data_nascimento}
-Método e quantidade: ${nomes[tiragem.tipo] || tiragem.tipo} (${tiragem.quantidade})`
-    );
+${tiragem.nome}
+${tiragem.data_nascimento}
+${nomes[tiragem.tipo] || tiragem.tipo} (${tiragem.quantidade})`
+);
 
     res.redirect(`https://wa.me/${numero}?text=${mensagem}`);
 });
